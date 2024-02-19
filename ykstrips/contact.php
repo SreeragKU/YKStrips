@@ -7,11 +7,11 @@ $categoryResultNav = $conn->query($categorySqlNav);
 
 // Fetch categories with at least one package
 $categorySqlPackages = "SELECT DISTINCT c.* FROM categories c
-                        JOIN PackageDetails pd ON c.id = pd.category_id";
+                        JOIN packagedetails pd ON c.id = pd.category_id";
 $categoryResultPackages = $conn->query($categorySqlPackages);
 
 // Fetch packages with category information
-$sqlPackages = "SELECT pd.*, c.category_name FROM PackageDetails pd
+$sqlPackages = "SELECT pd.*, c.category_name FROM packagedetails pd
                 JOIN categories c ON pd.category_id = c.id";
 $resultPackages = $conn->query($sqlPackages);
 
@@ -27,18 +27,6 @@ while ($row = $categoryResultPackages->fetch_assoc()) {
     $categoriesPackages[] = $row;
 }
 
-// Process the form submission
-if (isset($_POST["subbtn"])) {
-    $nm = $_POST["nm"];
-    $em = $_POST["em"];
-    $sub = $_POST["sub"];
-    $mes = $_POST["mes"];
-
-    $insertSql = "INSERT INTO contact_form (name, email, subject, message) VALUES ('$nm', '$em', '$sub', '$mes')";
-
-    $conn->query($insertSql);
-}
-
 $conn->close();
 ?>
 
@@ -51,29 +39,15 @@ $conn->close();
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
-
-    <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon">
-
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-
-    <!-- Icon Font Stylesheet -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-    <!-- Libraries Stylesheet -->
-    <link href="lib/animate/animate.min.css" rel="stylesheet">
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
 
-    <!-- Customized Bootstrap Stylesheet -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
     <style>
         .slider-container {
             width: 100%;
@@ -82,6 +56,7 @@ $conn->close();
             margin-left: auto;
             margin-right: auto;
         }
+
         .slider-cat-container {
             width: 70%;
             overflow: hidden;
@@ -97,13 +72,13 @@ $conn->close();
 
         .slider-item {
             flex: 0 0 auto;
-            margin-right: 20px;
+            margin-right: 2px;
         }
 
 
         .destination-card {
             width: 100%;
-            margin-right: 20px;
+            margin-right: 2px;
             overflow: hidden;
         }
 
@@ -115,8 +90,18 @@ $conn->close();
         }
 
         .destination-info {
-            padding: 10px;
-            background: #fff;
+            text-align: center;
+        }
+
+        .destination-info h3,
+        .destination-info h6 {
+            margin: 5px 0;
+        }
+
+        .destination-info .btn {
+            font-size: 1.2em;
+            padding: 10px 20px;
+            margin-top: 10px;
         }
 
         .slider-controls {
@@ -139,96 +124,129 @@ $conn->close();
             /* Add padding for better spacing */
         }
 
-        .category-slider {
-            max-width: 100%;
-            overflow: hidden;
+        .logo-img {
+            max-width: 250px;
+            border-radius: 50%;
+            padding: 5px;
+            transition: max-width 0.5s ease-in-out;
         }
 
-        .category-card {
-            max-width: 100%;
-            text-align: center;
-        }
-
-        .category-card img {
-            max-width: 50px;
-            max-height: 50px;
-            object-fit: contain;
-        }
-
-        .social-icons {
-            display: flex;
-            align-items: center;
-            margin-left: auto;
-            gap: 15px;
-        }
-
-        .social-icons a {
-            font-size: 25px;
-            color: white;
+        .btn-primary {
+            color: #ffffff;
+            background-color: #007bff;
+            font-size: 1.8em;
         }
     </style>
+    <style>
+        @media only screen and (max-width: 767px) {
+            .social-icons {
+                display: none;
+                /* Hide social media icons on small screens */
+            }
+
+            .container-xxl {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                width: 50%;
+            }
+
+            .container {
+                width: 50%;
+            }
+
+            .slider-item {
+                margin-right: 5px;
+            }
+
+            .logo-img {
+                max-width: 250px;
+                border-radius: 50%;
+                padding: 5px;
+                transition: max-width 0.5s ease-in-out;
+            }
+
+            .btn-primary {
+                font-size: 0.4em;
+            }
+
+            .btn-smaller-font {
+                font-size: 0.4em;
+            }
+
+            .btn {
+                width: 100%;
+                height: auto;
+            }
+        }
+
+        @media only screen and (max-width: 767px) {
+            .footer .social-icons {
+                display: flex;
+                justify-content: center;
+            }
+        }
+    </style>
+
+
+    <style>
+        body {
+            background-image: url('img/background-2.png');
+            background-repeat: repeat;
+            background-size: 300px 300px;
+            background-position: center center;
+        }
+
+        .owl-prev,
+        .owl-next {
+            display: none !important;
+        }
+    </style>
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
 </head>
 
 <body>
-  <!-- Navbar & Hero Start -->
-  <div class="container-fluid position-relative p-0">
-    <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0" style="background-color:  #316FF6;">
-        <a href="index.php" class="navbar-brand p-0">
-            <img src="img/logo.png" alt="Logo" style="border-radius: 50%; background-color: white; padding: 5px;">
-        </a>
-        <!-- Category Slider Start for Navigation -->
-        <div class="container-xxl py-2 category-slider">
-            <div class="container">
-                <div class="slider-cat-container ">
-                    <div class="slider-wrapper">
-                        <?php foreach ($categoriesNav as $category) : ?>
-                            <div class="col-lg-2 col-md-3 wow zoomIn slider-item" data-wow-delay="0.1s">
-                                <div class="category-card">
-                                    <!-- Wrap the category icon with an anchor tag -->
-                                    <a href="category_page.php?category_id=<?php echo $category['id']; ?>">
-                                        <img class="img-fluid" src="<?php echo $category['icon_path']; ?>" alt="Category Icon">
-                                        <div class="category-name" style="color: white;"><?php echo $category['category_name']; ?></div>
-                                    </a>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                    <!-- Update the slider-controls section -->
-                    <div class="slider-controls">
-                        <div class="slider-control" onclick="prevCategorySlide()"><i class="fas fa-chevron-left"></i></div>
-                        <div class="slider-control" onclick="nextCategorySlide()"><i class="fas fa-chevron-right"></i></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Category Slider End for Navigation -->
 
-        <!-- Social Media Icons -->
-        <div class="social-icons ml-auto">
-            <a href="https://www.instagram.com/yks.yathrakarudesrdhakku?igsh=M2tqbTVnNWx1cHEy&utm_source=qr" target="_blank" class="text-white">
-                <i class="fab fa-instagram"></i>
-            </a>
-            <a href="https://www.instagram.com/yks_trip?igsh=cWQxbThhNDRsbTZ5&utm_source=qr" target="_blank" class="text-white">
-                <i class="fab fa-instagram"></i>
-            </a>
-            <a href="https://youtube.com/@ykshere?si=R3n-6trG0xPv0RFX" target="_blank" class="text-white">
-                <i class="fab fa-youtube"></i>
-            </a>
-        </div>
-    </nav>
 
-    <div class="container-fluid bg-primary py-5 mb-5 hero-header">
-        <div class="container py-5">
-            <div class="row justify-content-center py-5">
-                <div class="col-lg-10 pt-lg-5 mt-lg-5 text-center">
-                    <h1 class="display-3 text-white mb-3 animated slideInDown">CONTACT US</h1>
+
+    <!-- Navbar & Hero Start -->
+    <div style="background-color: white; width: 100%"><?php include "header.php"; ?></div>
+        <div class="container-fluid py-5 mb-5 hero-header" style="background-image: url('img/pexels-saifcom-7086906.jpg'); background-size: cover; width: 100%;">
+            <div class="container py-5">
+                <div class="row justify-content-center py-5">
+                    <div class="col-lg-10 pt-lg-5 mt-lg-5 text-center">
+                        <h1 class="display-3 text-white mb-3 animated slideInDown">CONTACT US</h1>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Navbar & Hero End -->
+    </div>
+    <!-- Navbar & Hero End -->
 
 
     <!-- Contact Start -->
@@ -264,29 +282,29 @@ $conn->close();
                     </a>
                 </div>
                 <div class="col-lg-4 col-md-12 wow fadeInUp" data-wow-delay="0.5s">
-                    <form action="#" method="post">
+                    <form action="send_whatsapp.php" method="post" target="_blank">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="nm" name="nm" placeholder="Your Name">
+                                    <input type="text" class="form-control" id="nm" name="nm" placeholder="Your Name" required>
                                     <label for="name">Your Name</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="email" class="form-control" id="em" name="em" placeholder="Your Email">
-                                    <label for="email">Your Email</label>
+                                    <input type="tel" class="form-control" id="ph" name="ph" pattern="[0-9]{10,}" placeholder="WhatsApp Number" required>
+                                    <label for="ph">WhatsApp</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="sub" name="sub" placeholder="Subject">
+                                    <input type="text" class="form-control" id="sub" name="sub" placeholder="Subject" required>
                                     <label for="subject">Subject</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <textarea class="form-control" name="mes" placeholder="Leave a message here" id="mes" style="height: 100px"></textarea>
+                                    <textarea class="form-control" name="mes" placeholder="Leave a message here" id="mes" style="height: 100px" required></textarea>
                                     <label for="message">Message</label>
                                 </div>
                             </div>
@@ -296,34 +314,20 @@ $conn->close();
                         </div>
                     </form>
                 </div>
+
             </div>
         </div>
     </div>
     <!-- Contact End -->
 
 
-     <!-- Footer Start -->
-    <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <div class="row g-5">
-                <div class="col-lg-3 col-md-6 d-flex justify-content-between align-items-center">
-                    <div>
-                        <a class="btn btn-link" href="index.php">Home</a>
-                        <a class="btn btn-link" href="about.php">About Us</a>
-                        <a class="btn btn-link" href="contact.php">Contact Us</a>
-                    </div>
-                    <img src="img/logo.png" alt="Logo">
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Footer End -->
+    <?php include "footer.php"; ?>
 
 
 
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-    
+
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -337,6 +341,45 @@ $conn->close();
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script>
+        let currentIndexTrending = 0;
+        const totalItemsTrending = document.querySelectorAll('.destination .slider-item').length / 2; // Divide by 2 to account for duplicates
+        const intervalTimeTrending = 3000;
+        let trendingInterval;
+
+        function startTrendingSlider() {
+            trendingInterval = setInterval(nextTrendingSlide, intervalTimeTrending);
+        }
+
+        function stopTrendingSlider() {
+            clearInterval(trendingInterval);
+        }
+
+        function nextTrendingSlide() {
+            currentIndexTrending = (currentIndexTrending + 1) % totalItemsTrending;
+            updateTrendingSlider();
+        }
+
+        function prevTrendingSlide() {
+            currentIndexTrending = (currentIndexTrending - 1 + totalItemsTrending) % totalItemsTrending;
+            updateTrendingSlider();
+        }
+
+        function updateTrendingSlider() {
+            const wrapperTrending = document.querySelector('.destination .slider-wrapper');
+            const slideWidthTrending = document.querySelector('.destination .slider-item').offsetWidth;
+            const newTransformValueTrending = -currentIndexTrending * slideWidthTrending;
+            wrapperTrending.style.transition = 'transform 0.5s ease-in-out'; // Add transition effect
+            wrapperTrending.style.transform = `translateX(${newTransformValueTrending}px)`;
+        }
+
+        // Automatic sliding for trending slider
+        startTrendingSlider();
+
+        // Stop automatic sliding when the user clicks next or previous
+        document.querySelector('.destination .slider-controls .slider-control').addEventListener('click', stopTrendingSlider);
+    </script>
+
 </body>
 
 </html>

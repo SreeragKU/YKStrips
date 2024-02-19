@@ -7,11 +7,11 @@ $categoryResultNav = $conn->query($categorySqlNav);
 
 // Fetch categories with at least one package
 $categorySqlPackages = "SELECT DISTINCT c.* FROM categories c
-                        JOIN PackageDetails pd ON c.id = pd.category_id";
+                        JOIN packagedetails pd ON c.id = pd.category_id";
 $categoryResultPackages = $conn->query($categorySqlPackages);
 
 // Fetch packages with category information
-$sqlPackages = "SELECT pd.*, c.category_name FROM PackageDetails pd
+$sqlPackages = "SELECT pd.*, c.category_name FROM packagedetails pd
                 JOIN categories c ON pd.category_id = c.id";
 $resultPackages = $conn->query($sqlPackages);
 
@@ -28,6 +28,32 @@ while ($row = $categoryResultPackages->fetch_assoc()) {
 }
 ?>
 
+<?php
+include "conn.php";
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $full_name = $_POST["fullName"];
+    $email = $_POST["email"];
+
+    $targetDir = "CV/";
+    $targetFile = $targetDir . basename($_FILES["resume"]["name"]);
+
+    move_uploaded_file($_FILES["resume"]["tmp_name"], $targetFile);
+
+    $insertSql = "INSERT INTO job_applications (full_name, email, resume_path) 
+                  VALUES ('$full_name', '$email', '$targetFile')";
+
+    if ($conn->query($insertSql) === TRUE) {
+        header("Location: thank_you.php");
+        exit();
+    } else {
+        echo "Error: " . $insertSql . "<br>" . $conn->error;
+    }
+}
+
+$conn->close();
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -39,6 +65,13 @@ while ($row = $categoryResultPackages->fetch_assoc()) {
     <meta content="" name="description">
 
     <style>
+        .logo-img {
+            max-width: 250px;
+            border-radius: 50%;
+            padding: 5px;
+            transition: max-width 0.5s ease-in-out;
+        }
+
         .slider-container {
             width: 100%;
             overflow: hidden;
@@ -130,17 +163,6 @@ while ($row = $categoryResultPackages->fetch_assoc()) {
             object-fit: contain;
         }
 
-        .social-icons {
-            display: flex;
-            align-items: center;
-            margin-left: auto;
-            gap: 15px;
-        }
-
-        .social-icons a {
-            font-size: 30px;
-            color: white;
-        }
         .slider-val-container {
             overflow: hidden;
             position: relative;
@@ -149,6 +171,15 @@ while ($row = $categoryResultPackages->fetch_assoc()) {
         .slider-val-wrapper {
             display: flex;
             transition: transform 0.5s ease-in-out;
+        }
+
+        .slider-val-item2 {
+            flex: 0 0 100%;
+        }
+
+        .slider-val-item2 img {
+            width: 100%;
+            height: auto;
         }
 
         .slider-val-item {
@@ -175,7 +206,99 @@ while ($row = $categoryResultPackages->fetch_assoc()) {
             background-color: #333;
             color: #fff;
         }
+
+        .btn-primary {
+            color: #ffffff;
+            background-color: #357bae;
+            font-size: 1.8em;
+        }
     </style>
+    <style>
+        @media only screen and (max-width: 767px) {
+            .d-flex .btn span {
+                display: none;
+            }
+
+            .btn-primary {
+                font-size: 0.4em;
+            }
+
+            .btn-smaller-font {
+                font-size: 0.4em;
+            }
+
+            .btn {
+                width: 100%;
+                height: auto;
+            }
+
+            .social-icons {
+                display: none;
+            }
+
+            .container-xxl {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+            }
+
+            .container {
+                width: 100%;
+            }
+
+            .category-card img {
+                max-width: 30px;
+                max-height: 30px;
+            }
+
+            .logo-img {
+                max-width: 250px;
+                border-radius: 50%;
+                padding: 5px;
+                transition: max-width 0.5s ease-in-out;
+            }
+
+            .slider-cat-container {
+                width: 100%;
+                overflow: hidden;
+                position: relative;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .slider-item {
+                width: 100%;
+                margin-right: 0;
+            }
+
+            .category-slider {
+                display: none;
+            }
+        }
+
+        @media only screen and (max-width: 767px) {
+            .footer .social-icons {
+                display: flex;
+                justify-content: center;
+            }
+        }
+    </style>
+    <style>
+        body {
+            background-image: url('img/background-2.png');
+            background-repeat: repeat;
+            background-size: 300px 300px;
+            background-position: center center;
+        }
+
+        .owl-prev,
+        .owl-next {
+            display: none !important;
+        }
+    </style>
+
 
 
     <!-- Favicon -->
@@ -206,175 +329,160 @@ while ($row = $categoryResultPackages->fetch_assoc()) {
 
 
     <!-- Navbar & Hero Start -->
-    <div class="container-fluid position-relative p-0">
-    <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0" style="background-color:  #316FF6;">
-            <a href="index.php" class="navbar-brand p-0">
-                <img src="img/logo.png" alt="Logo" style="border-radius: 50%; background-color: white; padding: 5px;">
-            </a>
-            <!-- Category Slider Start for Navigation -->
-            <div class="container-xxl py-2 category-slider">
-                <div class="container">
-                    <div class="slider-cat-container ">
-                        <div class="slider-wrapper">
-                            <?php foreach ($categoriesNav as $category) : ?>
-                                <div class="col-lg-2 col-md-3 wow zoomIn slider-item" data-wow-delay="0.1s">
-                                    <div class="category-card">
-                                        <!-- Wrap the category icon with an anchor tag -->
-                                        <a href="category_page.php?category_id=<?php echo $category['id']; ?>">
-                                            <img class="img-fluid" src="<?php echo $category['icon_path']; ?>" alt="Category Icon">
-                                            <div class="category-name" style="color: white;"><?php echo $category['category_name']; ?></div>
-                                        </a>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                        <!-- Update the slider-controls section -->
-                        <div class="slider-controls">
-                            <div class="slider-control" onclick="prevCategorySlide()"><i class="fas fa-chevron-left"></i></div>
-                            <div class="slider-control" onclick="nextCategorySlide()"><i class="fas fa-chevron-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Category Slider End for Navigation -->
-
-
-            <!-- Social Media Icons -->
-            <div class="social-icons ml-auto">
-                <a href="https://www.instagram.com/yks.yathrakarudesrdhakku?igsh=M2tqbTVnNWx1cHEy&utm_source=qr" target="_blank" class="text-white">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="https://www.instagram.com/yks_trip?igsh=cWQxbThhNDRsbTZ5&utm_source=qr" target="_blank" class="text-white">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="https://youtube.com/@ykshere?si=R3n-6trG0xPv0RFX" target="_blank" class="text-white">
-                    <i class="fab fa-youtube"></i>
-                </a>
-            </div>
-        </nav>
-
-
-        <div class="container-fluid bg-primary py-5 mb-5 hero-header">
-            <div class="container py-5">
-                <div class="row justify-content-center py-5">
-                    <div class="col-lg-10 pt-lg-5 mt-lg-5 text-center">
-                        <h1 class="display-3 text-white mb-3 animated slideInDown" style="font-size: 2.5em;">OUR MISSION</h1>
-                        <p class="display-3  mb-3 animated slideInDown" style="font-size: 3.5em; color: #357bae;  text-shadow: 2px 2px 0px white, -2px -2px 0px white, 2px -2px 0px white, -2px 2px 0px white;">Make your travel</p>
-                        <p class="display-3  mb-3 animated slideInDown" style="font-size: 3.5em; color: #357bae;  text-shadow: 2px 2px 0px white, -2px -2px 0px white, 2px -2px 0px white, -2px 2px 0px white;">more seamless.</p>
-                        </div>
-                    </div>
+    <div><?php include "header.php"; ?></div>
+    <div class="container-fluid py-5 mb-5 hero-header" style="background-image: url('img/pexels-saifcom-7086906.jpg'); background-size: cover; width: 100%;">
+        <div class="container py-5">
+            <div class="row justify-content-center py-5">
+                <div class="col-lg-10 pt-lg-5 mt-lg-5 text-center">
+                    <h1 class="display-3 text-white mb-3 animated slideInDown" style="font-size: 2.5em;">OUR MISSION</h1>
+                    <p class="display-3  mb-3 animated slideInDown" style="font-size: 3.5em; color: #357bae;  text-shadow: 2px 2px 0px white, -2px -2px 0px white, 2px -2px 0px white, -2px 2px 0px white;">Make your travel</p>
+                    <p class="display-3  mb-3 animated slideInDown" style="font-size: 3.5em; color: #357bae;  text-shadow: 2px 2px 0px white, -2px -2px 0px white, 2px -2px 0px white, -2px 2px 0px white;">more seamless.</p>
                 </div>
             </div>
         </div>
+    </div>
+    </div>
     </div>
     <!-- Navbar & Hero End -->
 
 
     <!-- About Start -->
-<div class="container-xxl py-5">
-    <div class="container text-center mb-4">
-        <img class="img-fluid" src="img/about.png" alt="Logo" style="max-width: 200px;">
-    </div>
-    <div class="container">
-        <div class="row g-5 align-items-center">
-            <div class="col-lg-3 text-center mb-4">
-                <h2 class="display-4 text-primary mb-2">500+</h2>
-                <p class="lead mb-0">Happy Customers</p>
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="container text-center mb-4">
+                <img class="img-fluid" src="img/about.png" alt="Logo" style="max-width: 200px;">
             </div>
-            <div class="col-lg-3 text-center mb-4">
-                <h2 class="display-4 text-primary mb-2">70+</h2>
-                <p class="lead mb-0">Destinations</p>
-            </div>
-            <div class="col-lg-3 text-center mb-4">
-                <h2 class="display-4 text-primary mb-2">30+</h2>
-                <p class="lead mb-0">Activities</p>
-            </div>
-            <div class="col-lg-3 text-center mb-4">
-                <h2 class="display-4 text-primary mb-2">40,000+</h2>
-                <p class="lead mb-0">YKS FAMILY</p>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- About End -->
-
-
-<!-- Value Start -->
-<div class="container-xxl py-5">
-    <div class="container">
-        <div class="slider-val-container">
-            <div class="slider-val-wrapper">
-                <!-- Replace these paths with your image paths -->
-                <div class="slider-val-item">
-                    <img src="img/value1.png" alt="Value 1">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-3 text-center mb-4">
+                    <h2 class="display-4 text-primary mb-2">500+</h2>
+                    <p class="lead mb-0">Happy Customers</p>
                 </div>
-                <div class="slider-val-item">
-                    <img src="img/value2.png" alt="Value 2">
+                <div class="col-lg-3 text-center mb-4">
+                    <h2 class="display-4 text-primary mb-2">70+</h2>
+                    <p class="lead mb-0">Destinations</p>
                 </div>
-                <div class="slider-val-item">
-                    <img src="img/value3.png" alt="Value 3">
+                <div class="col-lg-3 text-center mb-4">
+                    <h2 class="display-4 text-primary mb-2">30+</h2>
+                    <p class="lead mb-0">Activities</p>
                 </div>
-                <div class="slider-val-item">
-                    <img src="img/value4.png" alt="Value 4">
+                <div class="col-lg-3 text-center mb-4">
+                    <h2 class="display-4 text-primary mb-2">40,000+</h2>
+                    <p class="lead mb-0">YKS FAMILY</p>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Value End -->
-<script>
-    let currentIndex = 0;
-
-    function nextSlide() {
-        currentIndex = (currentIndex + 1) % document.querySelectorAll('.slider-val-item').length;
-        updateSlider();
-    }
-
-    function updateSlider() {
-        const sliderWrapper = document.querySelector('.slider-val-wrapper');
-        const itemWidth = document.querySelector('.slider-val-item').offsetWidth;
-
-        sliderWrapper.style.transform = `translateX(${-currentIndex * itemWidth}px)`;
-    }
-
-    // Automatically slide every 3 seconds (adjust as needed)
-    setInterval(nextSlide, 3000);
-</script>
+    <!-- About End -->
 
 
-<!-- Our Journey Start -->
-<div class="text-center py-5" style="margin-left: 20px; margin-right: 20px;">
-    <h1 class="display-3 mb-4" style="font-size: 2.5em; border-bottom: 2px solid #007bff;">Our Journey</h1>
-    <p class="lead" style="font-size: 1.5em; color: #555;">
-        In the heart of our travel haven, we started by exploring with loved ones and sharing the joy on social media. 
-        When we hit 10,000 followers in 2023, we realized our duty was to make travel effortless and magical. 
-        So, we built a charming space dedicated to crafting seamless and unforgettable journeys. 
-        The best part? Our travelers, enchanted by our first adventure, now choose only us for their next escapade. 
-        We carefully pick destinations and assemble a friendly team, ensuring each trip is a simple yet beautiful memory.
-    </p>
-</div>
-<!-- Our Journey End -->
-<div style="text-align: center; font-size: 3.5em; border-top: 2px solid #007bff;"><img src="img/employ.png" alt="Join Us"></div>
-
-
-        
-
-    <!-- Footer Start -->
-    <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <div class="row g-5">
-                <div class="col-lg-3 col-md-6 d-flex justify-content-between align-items-center">
-                    <div>
-                        <a class="btn btn-link" href="index.php">Home</a>
-                        <a class="btn btn-link" href="about.html">About Us</a>
-                        <a class="btn btn-link" href="contact.html">Contact Us</a>
+    <!-- Value Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="slider-val-container">
+                <div class="slider-val-wrapper">
+                    <!-- Replace these paths with your image paths -->
+                    <div class="slider-val-item">
+                        <img src="img/v1.png" alt="Value 1">
                     </div>
-                    <img src="img/logo.png" alt="Logo">
+                    <div class="slider-val-item">
+                        <img src="img/v2.png" alt="Value 2">
+                    </div>
+                    <div class="slider-val-item">
+                        <img src="img/v3.png" alt="Value 3">
+                    </div>
+                    <div class="slider-val-item">
+                        <img src="img/v4.png" alt="Value 4">
+                    </div>
+                    <div class="slider-val-item">
+                        <img src="img/v5.png" alt="Value 5">
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Footer End -->
+    <!-- Value End -->
+    <script>
+        let currentIndex = 0;
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % document.querySelectorAll('.slider-val-item').length;
+            updateSlider();
+        }
+
+        function updateSlider() {
+            const sliderWrapper = document.querySelector('.slider-val-wrapper');
+            const itemWidth = document.querySelector('.slider-val-item').offsetWidth;
+
+            sliderWrapper.style.transform = `translateX(${-currentIndex * itemWidth}px)`;
+        }
+
+        // Automatically slide every 3 seconds (adjust as needed)
+        setInterval(nextSlide, 3000);
+    </script>
+
+
+    <!-- Our Journey Start -->
+    <div class="text-center py-5" style="margin-left: 20px; margin-right: 20px;">
+        <h1 class="display-3 mb-4" style="font-size: 2.5em; border-bottom: 2px solid #007bff;">Our Journey</h1>
+        <p class="lead" style="font-size: 1.5em; color: #555;">
+            In the heart of our travel haven, we started by exploring with loved ones and sharing the joy on social media.
+            When we hit 10,000 followers in 2023, we realized our duty was to make travel effortless and magical.
+            So, we built a charming space dedicated to crafting seamless and unforgettable journeys.
+            The best part? Our travelers, enchanted by our first adventure, now choose only us for their next escapade.
+            We carefully pick destinations and assemble a friendly team, ensuring each trip is a simple yet beautiful memory.
+        </p>W
+    </div>
+    <!-- Our Journey End -->
+    <div class="slider-val-item2">
+        <img src="img/employ.png" alt="Value 4">
+    </div>
+
+    <!-- Apply Now Button -->
+    <div class="text-center py-4">
+        <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#applyNowModal">Apply Now</button>
+    </div>
+
+   <!-- Apply Now Modal -->
+<div class="modal fade" id="applyNowModal" tabindex="-1" aria-labelledby="applyNowModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="applyNowModalLabel">Apply Now</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Add your application form here -->
+                <form action="#" method="post" enctype="multipart/form-data">
+                    <!-- Basic details inputs -->
+                    <div class="mb-3">
+                        <label for="fullName" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="fullName" name="fullName" pattern="[A-Za-z ]{1,}" title="Please enter a valid name" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" title="Please enter a valid email address" required>
+                    </div>
+
+                    <!-- CV/Resume upload -->
+                    <div class="mb-3">
+                        <label for="resume" class="form-label">Upload CV/Resume (PDF or DOCX only)</label>
+                        <input type="file" class="form-control" id="resume" name="resume" accept=".pdf, .doc, .docx" required>
+                        <small id="fileHelp" class="form-text text-muted">Supported formats: PDF, DOC, DOCX</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit Application</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+    <?php include "footer.php"; ?>
+
 
 
     <!-- Back to Top -->
@@ -394,55 +502,6 @@ while ($row = $categoryResultPackages->fetch_assoc()) {
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
-
-    <script>
-        let currentIndexCategory = 0;
-        const totalItemsCategory = document.querySelectorAll('.category-slider .slider-item').length;
-        const intervalTimeCategory = 3000;
-        let categoryInterval;
-
-        function startCategorySlider() {
-            categoryInterval = setInterval(nextCategorySlide, intervalTimeCategory);
-        }
-
-        function stopCategorySlider() {
-            clearInterval(categoryInterval);
-        }
-
-        function nextCategorySlide() {
-            currentIndexCategory = (currentIndexCategory + 1) % totalItemsCategory;
-            updateCategorySlider();
-        }
-
-        function prevCategorySlide() {
-            currentIndexCategory = (currentIndexCategory - 1 + totalItemsCategory) % totalItemsCategory;
-            updateCategorySlider();
-        }
-
-        function updateCategorySlider() {
-            const wrapperCategory = document.querySelector('.category-slider .slider-wrapper');
-            const slideWidthCategory = document.querySelector('.category-slider .slider-item').offsetWidth;
-            const newTransformValueCategory = -currentIndexCategory * slideWidthCategory;
-            wrapperCategory.style.transition = 'transform 0.5s ease-in-out'; // Add transition effect
-            wrapperCategory.style.transform = `translateX(${newTransformValueCategory}px)`;
-        }
-    </script>
-
-
-    <?php
-    // Only start category slide if there are more than 3 categories
-    if (!empty($categories) && count($categories) > 3) {
-    ?>
-        <script>
-            // Automatic sliding for category slider
-            startCategorySlider();
-
-            // Stop automatic sliding when the user clicks next or previous
-            document.querySelector('.slider-controls .slider-control').addEventListener('click', stopCategorySlider);
-        </script>
-    <?php
-    }
-    ?>
 
 
 </body>

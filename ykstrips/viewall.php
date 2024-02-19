@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateStatus'])) {
     $updatedStatus = isset($_POST['trending']) ? $_POST['trending'] : [];
 
     // Fetch all packages from the database
-    $sql = "SELECT id, trending FROM PackageDetails";
+    $sql = "SELECT id, trending FROM packagedetails";
     $result = $conn->query($sql);
     $packageStatus = [];
     while ($row = $result->fetch_assoc()) {
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateStatus'])) {
         $id = intval($id);
 
         // Update the trending status in the database for checked packages
-        $updateSql = "UPDATE PackageDetails SET trending = 1 WHERE id = $id";
+        $updateSql = "UPDATE packagedetails SET trending = 1 WHERE id = $id";
         $conn->query($updateSql);
 
         // Remove checked package from the array to identify unchecked packages later
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateStatus'])) {
         $id = intval($id);
 
         // Update the trending status in the database for previously true packages that are now unchecked
-        $updateSql = "UPDATE PackageDetails SET trending = 0 WHERE id = $id";
+        $updateSql = "UPDATE packagedetails SET trending = 0 WHERE id = $id";
         $conn->query($updateSql);
     }
 
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateCategory'])) {
         $categoryId = ($categoryId !== '') ? intval($categoryId) : null;
 
         // Update the category in the database for the specified package
-        $updateCategorySql = "UPDATE PackageDetails SET category_id = " . ($categoryId !== null ? $categoryId : "NULL") . " WHERE id = $id";
+        $updateCategorySql = "UPDATE packagedetails SET category_id = " . ($categoryId !== null ? $categoryId : "NULL") . " WHERE id = $id";
         $conn->query($updateCategorySql);
     }
 
@@ -81,7 +81,7 @@ while ($categoryRow = $categoryResult->fetch_assoc()) {
 }
 
 // Fetch all packages from the database
-$sql = "SELECT * FROM PackageDetails";
+$sql = "SELECT * FROM packagedetails";
 $result = $conn->query($sql);
 ?>
 
@@ -97,6 +97,7 @@ $result = $conn->query($sql);
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -283,17 +284,7 @@ $result = $conn->query($sql);
 </head>
 
 <body>
-    <div id="sidebar">
-        <div class="logo mb-4">
-            <img src="img/logo.png" alt="Logo" style="max-width: 80%;">
-        </div>
-        <a href="dashboard.php">Dashboard</a>
-        <a href="viewall.php">View All Packages</a>
-        <a href="addpackage.php">Add New Package</a>
-        <a href="categories.php">Manage Destination</a>
-        <a href="#" onclick="logout()">Logout</a>
-        <!-- Add more links as needed -->
-    </div>
+<?php include "dashboard.php"; ?>
 
     <div id="content">
         <div class="container">
@@ -362,8 +353,8 @@ $result = $conn->query($sql);
                                         echo $row["trending"] ? "checked" : "";
                                         echo "></td>";
                                         echo "<td>
-                                <a class='edit-btn' href='editpackage.php?id=" . $row["id"] . "'>Edit</a>
-                                <a class='delete-btn' href='deletepackage.php?id=" . $row["id"] . "'>Delete</a>
+                                        <a href='editpackage.php?id=" . $row["id"] . "' title='Edit'><i class='fas fa-edit'></i></a>
+                                        <a href='deletepackage.php?id=" . $row["id"] . "' title='Delete'><i class='fas fa-trash-alt'></i></a>
                             </td>";
                                         echo "</tr>";
                                     }

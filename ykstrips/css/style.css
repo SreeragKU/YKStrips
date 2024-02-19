@@ -100,12 +100,12 @@
 }
 
 .navbar-light .navbar-brand img {
-    max-height: 60px;
+    max-height: 80px;
     transition: .5s;
 }
 
 .sticky-top.navbar-light .navbar-brand img {
-    max-height: 45px;
+    max-height: 80px;
 }
 
 @media (max-width: 991.98px) {
@@ -127,7 +127,7 @@
     }
 
     .navbar-light .navbar-brand img {
-        max-height: 45px;
+        max-height: 80px;
     }
 }
 
@@ -171,13 +171,13 @@
 
 /*** Hero Header ***/
 .hero-header {
-    background: linear-gradient(rgba(20, 20, 31, .7), rgba(20, 20, 31, .7)), url(../img/bg-hero.jpg);
+    background: linear-gradient(rgba(20, 20, 31, .7), rgba(20, 20, 31, .7));
+    background-image: url(../img/bg-hero.jpg);
     background-position: center center;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: cover, cover; 
     height: 90vh;
 }
-
 
 .breadcrumb-item + .breadcrumb-item::before {
     color: rgba(255, 255, 255, .5);

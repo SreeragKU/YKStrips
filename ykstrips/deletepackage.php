@@ -18,7 +18,7 @@ if (isset($_GET['id'])) {
     $packageId = $_GET['id'];
 
     // Prepare and execute the SQL DELETE query
-    $sql = "DELETE FROM PackageDetails WHERE id = ?";
+    $sql = "DELETE FROM packagedetails WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $packageId);
 

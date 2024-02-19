@@ -79,7 +79,7 @@ if (isset($_POST['submit'])) {
     $itinerarySerialized = serialize($itinerary);
     $faqsSerialized = serialize($faqs);
     // Prepare and execute the SQL INSERT query
-    $sql = "INSERT INTO PackageDetails 
+    $sql = "INSERT INTO packagedetails 
     (package_name, no_of_days, package_description, locations, package_price, discount_price, overview, highlight, accommodation, meals, transportation, itinerary, cost_includes, cost_excludes, faqs, map_link, package_image) 
     VALUES 
     (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -282,17 +282,7 @@ if (isset($_POST['submit'])) {
 </head>
 
 <body>
-    <div id="sidebar">
-        <div class="logo">
-            <img src="img/logo.png" alt="Logo" style="max-width: 100%;">
-        </div>
-        <a href="dashboard.php">Dashboard</a>
-        <a href="viewall.php">View All Packages</a>
-        <a href="addpackage.php">Add New Package</a>
-        <a href="categories.php">Manage Destination</a>
-        <a href="#" onclick="logout()">Logout</a>
-        <!-- Add more links as needed -->
-    </div>
+<?php include "dashboard.php"; ?>
 
     <div id="content">
         <form action="addpackage.php" method="post" enctype="multipart/form-data" class="container">

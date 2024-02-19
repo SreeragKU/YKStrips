@@ -5,7 +5,7 @@ if (isset($_GET['id'])) {
     $packageId = $_GET['id'];
 
     // Fetch package details from the database
-    $sql = "SELECT * FROM PackageDetails WHERE id = ?";
+    $sql = "SELECT * FROM packagedetails WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $packageId);
     $stmt->execute();
@@ -108,7 +108,7 @@ if (isset($_POST['submit'])) {
     $itinerarySerialized = serialize($itinerary);
     $faqsSerialized = serialize($faqs);
 
-    $sql = "UPDATE PackageDetails SET 
+    $sql = "UPDATE packagedetails SET 
     package_name = ?, 
     package_description = ?, 
     package_price = ?, 
@@ -324,17 +324,7 @@ $stmt->execute();
 </head>
 
 <body>
-    <div id="sidebar">
-        <div class="logo mb-4">
-            <img src="img/logo.png" alt="Logo" style="max-width: 80%;">
-        </div>
-        <a href="dashboard.php">Dashboard</a>
-        <a href="viewall.php">View All Packages</a>
-        <a href="addpackage.php">Add New Package</a>
-        <a href="categories.php">Manage Destination</a>
-        <a href="#" onclick="logout()">Logout</a>
-        <!-- Add more links as needed -->
-    </div>
+<?php include "dashboard.php"; ?>
     <div id="content">
         <form action="" method="post" enctype="multipart/form-data">
             <div class="container">

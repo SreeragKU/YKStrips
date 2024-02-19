@@ -1,6 +1,7 @@
 <?php
 include "conn.php";
 
+// Fetch categories for navigation
 $categorySql = "SELECT * FROM categories";
 $categoryResult = $conn->query($categorySql);
 
@@ -8,18 +9,12 @@ $categoriesNav = [];
 while ($row = $categoryResult->fetch_assoc()) {
     $categoriesNav[] = $row;
 }
-// Fetch the categories into an array
-$categories = [];
-while ($row = $categoryResult->fetch_assoc()) {
-    $categories[] = $row;
-}
 
-// Check if package ID is provided in the URL
 if (isset($_GET['id'])) {
-    $packageId = $_GET['id'];
+    $packageId = isset($_GET['id']) ? base64_decode($_GET['id']) : null;
 
     // Fetch package details for the selected package
-    $packageSql = "SELECT pd.*, c.category_name FROM PackageDetails pd
+    $packageSql = "SELECT pd.*, c.category_name FROM packagedetails pd
                    JOIN categories c ON pd.category_id = c.id
                    WHERE pd.id = $packageId";
     $packageResult = $conn->query($packageSql);
@@ -35,10 +30,21 @@ if (isset($_GET['id'])) {
         // Unserialize the itinerary and FAQs
         $itinerary = unserialize($selectedPackage["itinerary"]);
         $faqs = unserialize($selectedPackage["faqs"]);
+
+        // Fetch images from the "gallery" table for the carousel
+        $gallerySql = "SELECT * FROM gallery WHERE package_id = $packageId";
+        $galleryResult = $conn->query($gallerySql);
+
+        // Fetch gallery images into an array
+        $galleryImages = [];
+        while ($row = $galleryResult->fetch_assoc()) {
+            $galleryImages[] = $row['image_name'];
+        }
+
+        // Add the selected package image to the gallery images array
+        array_unshift($galleryImages);
     }
 }
-
-$debugMode = true;
 ?>
 
 <!DOCTYPE html>
@@ -81,24 +87,6 @@ $debugMode = true;
             margin-left: auto;
             margin-right: auto;
         }
-        .slider-cat-container {
-            width: 70%;
-            overflow: hidden;
-            position: relative;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .social-icons {
-            display: flex;
-            align-items: center;
-            margin-left: auto;
-            gap: 15px;
-        }
-
-        .social-icons a {
-            font-size: 25px;
-            color: white;
-        }
 
         .slider-wrapper {
             display: flex;
@@ -107,9 +95,8 @@ $debugMode = true;
 
         .slider-item {
             flex: 0 0 auto;
-            margin-right: 20px;
+            margin-right: 5px;
         }
-
 
         .destination-card {
             width: 100%;
@@ -146,25 +133,6 @@ $debugMode = true;
             justify-content: space-between;
             transform: translateY(-50%);
             padding: 0 20px;
-            /* Add padding for better spacing */
-        }
-
-        .category-slider {
-            max-width: 100%;
-            overflow: hidden;
-        }
-
-        .category-card {
-            max-width: 100%;
-            text-align: center;
-            padding: 10px;
-        }
-
-        .category-card img {
-            max-width: 50px;
-            /* Adjust icon size */
-            max-height: 50px;
-            object-fit: contain;
         }
 
         body {
@@ -172,18 +140,8 @@ $debugMode = true;
             color: #333;
         }
 
-        nav.navbar {
-            background-color: #fff;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        nav.navbar img {
-            max-height: 40px;
-        }
-
         .container-xxl {
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             padding: 30px;
         }
 
@@ -201,60 +159,26 @@ $debugMode = true;
             color: #333;
         }
 
-        .img-fluid {
+        .img-bod-fluid {
             border-radius: 8px;
             margin-top: 20px;
-            max-width:700px;
-            max-height: 650px;
-
+            max-width: 700px;
+            max-height: 650px
         }
 
-        .nav-tabs {
-            border-bottom: 2px solid #007bff;
-            margin-top: 20px;
+        .img-container {
+            max-width: 100%;
+            overflow: hidden;
         }
 
-        .nav-tabs .nav-link {
-            border: 1px solid #ddd;
-            border-radius: 4px 4px 0 0;
-            color: #333;
-            background-color: #f9f9f9;
-        }
-
-        .nav-tabs .nav-link.active {
-            color: #fff;
-            background-color: #007bff;
-            border-color: #007bff;
+        .img-container img {
+            width: 50%;
+            height: auto;
         }
 
         .tab-pane {
             padding: 20px 0;
-        }
-
-        .timeline {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .timeline-item {
-            margin-bottom: 20px;
-        }
-
-        .timeline-marker {
-            background-color: #007bff;
-            border-radius: 50%;
-            width: 16px;
-            height: 16px;
-            margin-right: 15px;
-            position: absolute;
-            left: -8px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .timeline-content {
-            margin-left: 30px;
+            background-color: #ffffff;
         }
 
         .map-container {
@@ -282,319 +206,286 @@ $debugMode = true;
             margin-top: 50px;
         }
 
-        .back-to-top {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
+        .btn-primary {
+            color: #ffffff;
             background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            padding: 10px 15px;
-            font-size: 20px;
-            cursor: pointer;
+            font-size: 1.8em;
+        }
+
+        .nav-tabs,
+        .tab-content {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .nav-tabs {
+            margin-bottom: 0;
+        }
+
+        .img-container,
+        .map-container {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .map {
+            width: 100%;
+            height: 100%;
+            border: 0;
         }
     </style>
+    <style>
+        @media only screen and (max-width: 767px) {
+            .social-icons {
+                display: none;
+            }
+
+            .btn-primary {
+                font-size: 0.4em;
+            }
+
+            .btn-smaller-font {
+                font-size: 0.4em;
+            }
+
+            .btn {
+                width: 100%;
+                height: auto;
+            }
+
+            .slider-container {
+                width: 100%;
+                overflow: hidden;
+                position: relative;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .slider-item {
+                flex: 0 0 auto;
+                margin-right: 10px;
+                /* Adjust the margin as needed */
+            }
+        }
+
+        @media only screen and (max-width: 767px) {
+            .footer .social-icons {
+                display: flex;
+                justify-content: center;
+            }
+        }
+    </style>
+    <style>
+        body {
+            background-image: url('img/background-2.png');
+            background-repeat: repeat;
+            background-size: 300px 300px;
+            background-position: center center;
+        }
+
+        .owl-prev,
+        .owl-next {
+            display: none !important;
+        }
+
+        .nav-tabs {
+            background-color: #ffffff;
+            border-radius: 8px;
+        }
+    </style>
+
 </head>
 
 <body>
     <!-- Navbar & Hero Start -->
-    <div class="container-fluid position-relative p-0">
-    <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0" style="background-color:  #316FF6;">
-            <a href="index.php" class="navbar-brand p-0">
-                <img src="img/logo.png" alt="Logo" style="border-radius: 50%; background-color: white; padding: 5px;">
-            </a>
-            <!-- Category Slider Start for Navigation -->
-            <div class="container-xxl py-2 category-slider">
-                <div class="container">
-                    <div class="slider-cat-container ">
-                        <div class="slider-wrapper">
-                            <?php foreach ($categoriesNav as $category) : ?>
-                                <div class="col-lg-2 col-md-3 wow zoomIn slider-item" data-wow-delay="0.1s">
-                                    <div class="category-card">
-                                        <!-- Wrap the category icon with an anchor tag -->
-                                        <a href="category_page.php?category_id=<?php echo $category['id']; ?>">
-                                            <img class="img-fluid" src="<?php echo $category['icon_path']; ?>" alt="Category Icon">
-                                            <div class="category-name" style="color: white;"><?php echo $category['category_name']; ?></div>
-                                        </a>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                        <!-- Update the slider-controls section -->
-                        <div class="slider-controls">
-                            <div class="slider-control" onclick="prevCategorySlide()"><i class="fas fa-chevron-left"></i></div>
-                            <div class="slider-control" onclick="nextCategorySlide()"><i class="fas fa-chevron-right"></i></div>
-                        </div>
-                    </div>
-                </div>
+    <div style="background-color: white; width: 100%"><?php include "header.php"; ?></div>
+
+    <!-- Package Detail Start -->
+    <div class="container-xxl py-5">
+        <?php if (isset($selectedPackage)) : ?>
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s" style="margin-top: 20px">
+                <h6 class="section-title bg-white text-center text-primary px-3"><?php echo $selectedPackage['category_name']; ?></h6>
+                <h1 class="mb-5"><?php echo $selectedPackage['package_name']; ?></h1>
             </div>
-            <!-- Category Slider End for Navigation -->
-
-            <!-- Social Media Icons -->
-            <div class="social-icons ml-auto">
-                <a href="https://www.instagram.com/yks.yathrakarudesrdhakku?igsh=M2tqbTVnNWx1cHEy&utm_source=qr" target="_blank" class="text-white">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="https://www.instagram.com/yks_trip?igsh=cWQxbThhNDRsbTZ5&utm_source=qr" target="_blank" class="text-white">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="https://youtube.com/@ykshere?si=R3n-6trG0xPv0RFX" target="_blank" class="text-white">
-                    <i class="fab fa-youtube"></i>
-                </a>
-            </div>
-        </nav>
-
-        <script>
-            let currentIndexCategory = 0;
-            let categoryInterval;
-
-            function startCategorySlider() {
-                categoryInterval = setInterval(nextCategorySlide, intervalTime);
-            }
-
-            function stopCategorySlider() {
-                clearInterval(categoryInterval);
-            }
-
-            function nextCategorySlide() {
-                currentIndexCategory = (currentIndexCategory + 1) % document.querySelectorAll('.category-slider .slider-item').length;
-                updateCategorySlider();
-            }
-
-            function prevCategorySlide() {
-                currentIndexCategory = (currentIndexCategory - 1 + document.querySelectorAll('.category-slider .slider-item').length) % document.querySelectorAll('.category-slider .slider-item').length;
-                updateCategorySlider();
-            }
-
-            function updateCategorySlider() {
-                const wrapperCategory = document.querySelector('.category-slider .slider-wrapper');
-                const slideWidthCategory = document.querySelector('.category-slider .slider-item').offsetWidth;
-                const newTransformValueCategory = -currentIndexCategory * slideWidthCategory;
-                wrapperCategory.style.transition = 'transform 0.5s ease-in-out'; // Add transition effect
-                wrapperCategory.style.transform = `translateX(${newTransformValueCategory}px)`;
-            }
-        </script>
-
-        <?php
-        // Only start category slide if there are more than 3 categories
-        if (count($categories) > 3) {
-        ?>
-            <script>
-                // Automatic sliding for category slider
-                startCategorySlider();
-
-                // Stop automatic sliding when the user clicks next or previous
-                document.querySelector('.slider-controls .slider-control').addEventListener('click', stopCategorySlider);
-            </script>
-        <?php
-        }
-        ?>
-
-        <!-- Package Detail Start -->
-        <div class="container-xxl py-5">
-            <?php if (isset($selectedPackage)) : ?>
-                <div class="text-center wow fadeInUp" data-wow-delay="0.1s" style="margin-top: 120px">
-                    <h6 class="section-title bg-white text-center text-primary px-3"><?php echo $selectedPackage['category_name']; ?></h6>
-                    <h1 class="mb-5">Discover the <?php echo $selectedPackage['category_name']; ?> Experience</h1>
-                </div>
-                <div class="overflow-hidden text-center">
-    <div class="img-container">
-        <img class="img-fluid" src="<?php echo $selectedPackage['package_image']; ?>" alt="Package Image">
-    </div>
-</div>
-
-
-                <div class="text-center mt-4">
-                    <a href="package.php" class="btn btn-primary rounded-pill py-2 px-4 text-center" style="color: #ffffff; background-color: #357bae; font-size: 1.4em;">
-                        View All Our Trips
-                    </a>
-
-                    <a href="https://api.whatsapp.com/send/?phone=%2B919074460902&text=<?php echo rawurlencode('Your message goes here'); ?>&app_absent=0" target="_blank" class="btn btn-primary rounded-pill py-2 px-4 text-center" style="color: #ffffff; background-color: #357bae; font-size: 1.4em;">
-                        <img src="img/whatsapp-logo.png" alt="WhatsApp Logo" style="width: 20px; height: 20px; margin-right: 5px;"> Chat on Whatsapp
-                    </a>
-                </div>
-                <!-- Tabs Section -->
-                <div class="row mt-5">
-                    <div class="col-lg-12">
-                        <ul class="nav nav-tabs" id="packageTabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link active" id="general-tab" data-bs-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">General</a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link" id="itinerary-tab" data-bs-toggle="tab" href="#itinerary" role="tab" aria-controls="itinerary" aria-selected="false">Itinerary</a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link" id="cost-tab" data-bs-toggle="tab" href="#cost" role="tab" aria-controls="cost" aria-selected="false">Cost</a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link" id="faq-tab" data-bs-toggle="tab" href="#faq" role="tab" aria-controls="faq" aria-selected="false">FAQ</a>
-                            </li>
-                        </ul>
-                        <div class="tab-content mt-3">
-                            <!-- General Tab -->
-                            <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
-                                <h2 class="mb-4">Package Overview</h2>
-                                <p><strong><i class="fas fa-map-marker-alt"></i> Location:</strong> <?php echo $selectedPackage['locations']; ?></p>
-                                <p><strong><i class="far fa-calendar"></i> No of Days:</strong> <?php echo $selectedPackage['no_of_days']; ?> days</p>
-                                <p><strong><i class="fas fa-home"></i> Accommodation:</strong> <?php echo $selectedPackage['accommodation']; ?></p>
-                                <p><strong><i class="fas fa-utensils"></i> Meals:</strong> <?php echo $selectedPackage['meals']; ?></p>
-                                <p><strong><i class="fas fa-car"></i> Transportation:</strong> <?php echo $selectedPackage['transportation']; ?></p>
-
-                                <h2 class="mb-4">Package Highlights</h2>
-                                <?php
-                                $highlights = explode(',', $selectedPackage['highlight']);
-                                foreach ($highlights as $highlight) {
-                                    echo "<p><i class='fas fa-star text-warning'></i> $highlight</p>";
-                                }
-                                ?>
+            <!-- Bootstrap Carousel -->
+            <div id="packageCarousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <?php
+                    // Check if $galleryImages is not empty
+                    if (!empty($galleryImages)) {
+                        foreach ($galleryImages as $index => $image) {
+                    ?>
+                            <div class="carousel-item <?php echo ($index === 0) ? 'active' : ''; ?>">
+                                <img class="d-block w-100" src="pack_img/<?php echo $image; ?>" alt="Gallery Image <?php echo $index + 1; ?>" style="object-fit: contain; max-height: 400px;"> <!-- Adjust the max-height as needed -->
                             </div>
+                        <?php
+                        }
+                    } else {
+                        // Use the first image from $selectedPackage as a placeholder
+                        ?>
+                        <div class="carousel-item active">
+                            <img class="d-block w-100" src="<?php echo $selectedPackage['package_image']; ?>" alt="Placeholder Image" style="object-fit: contain; max-height: 400px;"> <!-- Adjust the max-height as needed -->
+                        </div>
+                    <?php
+                    }
+                    ?>
+                </div>
+                <a class="carousel-control-prev" href="#packageCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#packageCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="https://api.whatsapp.com/send/?phone=%2B919074460902&text=<?php echo rawurlencode('Your message goes here'); ?>&app_absent=0" target="_blank" class="btn btn-primary rounded-3 py-2 px-4 text-center" style="color: #ffffff; background-color: #007bff; font-size: 1.4em;">
+                    <img src="img/whatsapp-logo.png" alt="WhatsApp Logo" style="width: 20px; height: 20px; margin-right: 5px;"> Chat on Whatsapp
+                </a>
+            </div>
+            <!-- Tabs Section -->
+            <div class="row mt-5">
+                <div class="col-lg-12">
+                    <ul class="nav nav-tabs" id="packageTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" id="general-tab" data-bs-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">General</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="itinerary-tab" data-bs-toggle="tab" href="#itinerary" role="tab" aria-controls="itinerary" aria-selected="false">Itinerary</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="cost-tab" data-bs-toggle="tab" href="#cost" role="tab" aria-controls="cost" aria-selected="false">Cost</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="faq-tab" data-bs-toggle="tab" href="#faq" role="tab" aria-controls="faq" aria-selected="false">FAQ</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <!-- General Tab -->
+                        <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
+                            <h2 class="mb-4">Package Overview</h2>
+                            <p><strong><i class="fas fa-map-marker-alt"></i> Location:</strong> <?php echo $selectedPackage['locations']; ?></p>
+                            <p><strong><i class="far fa-calendar"></i> No of Days:</strong> <?php echo $selectedPackage['no_of_days']; ?> days</p>
+                            <p><strong><i class="fas fa-home"></i> Accommodation:</strong> <?php echo $selectedPackage['accommodation']; ?></p>
+                            <p><strong><i class="fas fa-utensils"></i> Meals:</strong> <?php echo $selectedPackage['meals']; ?></p>
+                            <p><strong><i class="fas fa-car"></i> Transportation:</strong> <?php echo $selectedPackage['transportation']; ?></p>
+
+                            <h2 class="mb-4">Package Highlights</h2>
+                            <?php
+                            $highlights = explode(',', $selectedPackage['highlight']);
+                            foreach ($highlights as $highlight) {
+                                echo "<p><i class='fas fa-star text-warning'></i> $highlight</p>";
+                            }
+                            ?>
+                        </div>
 
 
-                            <!-- Itinerary Tab -->
-                            <div class="tab-pane fade" id="itinerary" role="tabpanel" aria-labelledby="itinerary-tab">
-                                <h2 class="mb-4">Itinerary</h2>
-                                <?php if (!empty($itinerary)) : ?>
-                                    <div class="timeline">
-                                        <?php $dayCount = 1; ?>
-                                        <?php foreach ($itinerary as $day) : ?>
-                                            <div class="timeline-item">
-                                                <div class="timeline-marker"></div>
-                                                <div class="timeline-content">
-                                                    <p>
-                                                        <strong>
-                                                            <i class="fa fa-clock"></i>
-                                                            Day <?php echo $dayCount++; ?>:
-                                                        </strong>
-                                                        <?php echo $day['title']; ?>
-                                                    </p>
-                                                    <?php
-                                                    $itineraryDescriptions = explode(',', $day['description']);
-                                                    foreach ($itineraryDescriptions as $description) {
-                                                        echo "<p>$description</p>";
-                                                    }
-                                                    ?>
-                                                </div>
+                        <!-- Itinerary Tab -->
+                        <div class="tab-pane fade" id="itinerary" role="tabpanel" aria-labelledby="itinerary-tab">
+                            <h2 class="mb-4">Itinerary</h2>
+                            <?php if (!empty($itinerary)) : ?>
+                                <div class="timeline">
+                                    <?php $dayCount = 1; ?>
+                                    <?php foreach ($itinerary as $day) : ?>
+                                        <div class="timeline-item">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <p>
+                                                    <strong>
+                                                        <i class="fa fa-clock"></i>
+                                                        Day <?php echo $dayCount++; ?>:
+                                                    </strong>
+                                                    <?php echo $day['title']; ?>
+                                                </p>
+                                                <?php
+                                                $itineraryDescriptions = explode(',', $day['description']);
+                                                foreach ($itineraryDescriptions as $description) {
+                                                    echo "<p>$description</p>";
+                                                }
+                                                ?>
                                             </div>
-                                        <?php endforeach; ?>
-                                    </div>
-                                <?php else : ?>
-                                    <p>No itinerary available.</p>
-                                <?php endif; ?>
-                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php else : ?>
+                                <p>No itinerary available.</p>
+                            <?php endif; ?>
+                        </div>
 
-                            <!-- Cost Tab -->
-                            <div class="tab-pane fade" id="cost" role="tabpanel" aria-labelledby="cost-tab">
-                                <h2 class="mb-4">Cost Includes</h2>
-                                <?php
-                                $costIncludes = explode(',', $selectedPackage['cost_includes']);
-                                foreach ($costIncludes as $include) {
-                                    echo "<p><i class='fas fa-check-circle text-success'></i> $include</p>";
-                                }
-                                ?>
+                        <!-- Cost Tab -->
+                        <div class="tab-pane fade" id="cost" role="tabpanel" aria-labelledby="cost-tab">
+                            <h2 class="mb-4">Cost Includes</h2>
+                            <?php
+                            $costIncludes = explode(',', $selectedPackage['cost_includes']);
+                            foreach ($costIncludes as $include) {
+                                echo "<p><i class='fas fa-check-circle text-success'></i> $include</p>";
+                            }
+                            ?>
 
-                                <h2 class="mb-4">Cost Excludes</h2>
-                                <?php
-                                $costExcludes = explode(',', $selectedPackage['cost_excludes']);
-                                foreach ($costExcludes as $exclude) {
-                                    echo "<p><i class='fas fa-times-circle text-danger'></i> $exclude</p>";
-                                }
-                                ?>
-                            </div>
+                            <h2 class="mb-4">Cost Excludes</h2>
+                            <?php
+                            $costExcludes = explode(',', $selectedPackage['cost_excludes']);
+                            foreach ($costExcludes as $exclude) {
+                                echo "<p><i class='fas fa-times-circle text-danger'></i> $exclude</p>";
+                            }
+                            ?>
+                        </div>
 
+                        <!-- FAQ Tab -->
+                        <div class="tab-pane fade" id="faq" role="tabpanel" aria-labelledby="faq-tab">
+                            <h2 class="mb-4">FAQs</h2>
+                            <?php if (!empty($faqs)) : ?>
+                                <ul class="list-group">
+                                    <?php foreach ($faqs as $index => $faq) : ?>
+                                        <li class="list-group-item">
+                                            <div class="faq-question">
+                                                <i class="fas fa-chevron-down"></i> <!-- Arrow icon -->
+                                                <strong><?php echo $faq['question']; ?></strong>
+                                            </div>
+                                            <div class="faq-answer" style="display: none;">
+                                                <p><?php echo $faq['answer']; ?></p>
+                                            </div>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            <?php else : ?>
+                                <p>No FAQs available.</p>
+                            <?php endif; ?>
+                        </div>
 
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                                var faqQuestions = document.querySelectorAll('.faq-question');
 
+                                faqQuestions.forEach(function(question, index) {
+                                    question.addEventListener('click', function() {
+                                        var answer = this.nextElementSibling; // Get the next sibling, which is the answer div
 
-                            <!-- FAQ Tab -->
-                            <div class="tab-pane fade" id="faq" role="tabpanel" aria-labelledby="faq-tab">
-                                <h2 class="mb-4">FAQs</h2>
-                                <?php if (!empty($faqs)) : ?>
-                                    <ul class="list-group">
-                                        <?php foreach ($faqs as $index => $faq) : ?>
-                                            <li class="list-group-item">
-                                                <div class="faq-question">
-                                                    <i class="fas fa-chevron-down"></i> <!-- Arrow icon -->
-                                                    <strong><?php echo $faq['question']; ?></strong>
-                                                </div>
-                                                <div class="faq-answer" style="display: none;">
-                                                    <p><?php echo $faq['answer']; ?></p>
-                                                </div>
-                                            </li>
-                                        <?php endforeach; ?>
-                                    </ul>
-                                <?php else : ?>
-                                    <p>No FAQs available.</p>
-                                <?php endif; ?>
-                            </div>
-
-                            <script>
-                                document.addEventListener("DOMContentLoaded", function() {
-                                    var faqQuestions = document.querySelectorAll('.faq-question');
-
-                                    faqQuestions.forEach(function(question, index) {
-                                        question.addEventListener('click', function() {
-                                            var answer = this.nextElementSibling; // Get the next sibling, which is the answer div
-
-                                            if (answer.style.display === 'block') {
-                                                answer.style.display = 'none';
-                                                question.querySelector('i').classList.remove('fa-chevron-up');
-                                                question.querySelector('i').classList.add('fa-chevron-down');
-                                            } else {
-                                                answer.style.display = 'block';
-                                                question.querySelector('i').classList.remove('fa-chevron-down');
-                                                question.querySelector('i').classList.add('fa-chevron-up');
-                                            }
-                                        });
+                                        if (answer.style.display === 'block') {
+                                            answer.style.display = 'none';
+                                            question.querySelector('i').classList.remove('fa-chevron-up');
+                                            question.querySelector('i').classList.add('fa-chevron-down');
+                                        } else {
+                                            answer.style.display = 'block';
+                                            question.querySelector('i').classList.remove('fa-chevron-down');
+                                            question.querySelector('i').classList.add('fa-chevron-up');
+                                        }
                                     });
                                 });
-                            </script>
-                            <!-- Map Tab -->
-                            <div class="container">
-
-                                <?php if (!empty($selectedPackage['map_link'])) : ?>
-                                    <?php if ($debugMode) : ?>
-                                        <?php ob_start(); // Start output buffering 
-                                        ?>
-                                        <?php var_dump($selectedPackage['map_link']); ?>
-                                        <?php $varDumpOutput = ob_get_clean(); // Capture and clean the output 
-                                        ?>
-                                        <pre><?php echo str_replace('"', '', preg_replace('/\w+\(\d+\) /', '', $varDumpOutput)); ?></pre>
-                                    <?php endif; ?>
-
-                                    <!-- Map Container -->
-                                    <div class="map-container">
-
-                                        <iframe class="map" src="<?php echo $selectedPackage['map_link']; ?>" frameborder="0" allowfullscreen></iframe>
-                                    </div>
-
-                                <?php else : ?>
-                                    <p>No map link available.</p>
-                                <?php endif; ?>
-                            </div>
-                        </div>
+                            });
+                        </script>
                     </div>
                 </div>
-            <?php endif; ?>
-        </div>
+            </div>
+        <?php endif; ?>
+    </div>
     </div>
     <!-- Package Detail End -->
 
-    <!-- Footer Start -->
-    <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <div class="row g-5">
-                <div class="col-lg-3 col-md-6 d-flex justify-content-between align-items-center">
-                    <div>
-                        <a class="btn btn-link" href="index.php">Home</a>
-                        <a class="btn btn-link" href="about.php">About Us</a>
-                        <a class="btn btn-link" href="contact.php">Contact Us</a>
-                    </div>
-                    <img src="img/logo.png" alt="Logo">
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Footer End -->
+    <?php include "footer.php"; ?>
 
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
@@ -614,6 +505,8 @@ $debugMode = true;
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+
+
 </body>
 
 </html>

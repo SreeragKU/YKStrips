@@ -224,17 +224,7 @@ $result = $conn->query($sql);
 </head>
 
 <body>
-    <div id="sidebar">
-        <div class="logo mb-4 text-center">
-            <img src="img/logo.png" alt="Logo" class="img-fluid rounded">
-        </div>
-        <a href="dashboard.php">Dashboard</a>
-        <a href="viewall.php">View All Packages</a>
-        <a href="addpackage.php">Add New Package</a>
-        <a href="categories.php">Manage Destination</a>
-        <a href="#" onclick="logout()">Logout</a>
-    </div>
-
+    <?php include "dashboard.php"; ?>
     <div id="content">
         <div class="container">
             <h2 class="text-center text-dark mb-4">Manage Destination</h2>

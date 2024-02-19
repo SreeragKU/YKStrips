@@ -6,7 +6,7 @@ if (isset($_GET['id'])) {
     $packageId = $_GET['id'];
 
     // Fetch package details from the database
-    $sql = "SELECT * FROM PackageDetails WHERE id = ?";
+    $sql = "SELECT * FROM packagedetails WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $packageId);
     $stmt->execute();

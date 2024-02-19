@@ -82,13 +82,12 @@
         <a href="viewall.php">View All Packages</a>
         <a href="addpackage.php">Add New Package</a>
         <a href="categories.php">Manage Destination</a>
+        <a href="visa.php">Add Visa</a>
+        <a href="viewvisa.php">Manage Visa</a>
+        <a href="homepage_bg.php">Homepage Images</a> 
+        <a href="gallery.php">Gallery</a> 
+        <a href="job.php">Job Applications</a>
         <a href="#" onclick="logout()">Logout</a>
-        <!-- Add more links as needed -->
-    </div>
-
-    <div id="content">
-        <h2>Welcome to the Dashboard</h2>
-        <!-- Add content specific to your dashboard here -->
     </div>
 </body>
 
