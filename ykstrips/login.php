@@ -1,7 +1,7 @@
 <?php
 // Define the correct username and password
-$correctUsername = 'ykstrip';
-$correctPassword = 'Ykstrip!20';
+$correctUsername = '';
+$correctPassword = '';
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
