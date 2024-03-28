@@ -232,24 +232,15 @@ $result = $conn->query($sql);
 </head>
 
 <body>
-
-
-
-    <!-- Navbar & Hero Start -->
-    <div style="background-color: white; width: 100%; position: fixed !important; top: 0 !important; z-index: 9999 !important;">
-        <?php include "header.php"; ?>
-    </div>
-
-
-
-    <!-- Navbar & Hero End -->
+    <div><?php include "header.php"; ?></div>
+    
 
     <!-- Display the packages for the selected category -->
     <div class="container-xxl py-5">
-        <div class="row g-4 justify-content-center">
+    <div class="row g-4 justify-content-center" style="margin-top: calc(var(--bs-gutter-y) * -4) !important;">
             <div class="container" style="margin-top: 80px">
-                <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                    <h2 class="section-title bg-white text-center text-primary px-3" style="margin-top: 120px; margin-bottom: 30px;">Packages</h2>
+                <div class="text-center wow fadeInUp" data-wow-delay="0.1s" style="margin-top: 20px">
+                <h2 class="section-title text-center text-primary px-3" style="background-color: rgba(255, 255, 255, 0.3);">Packages</h2>
                     <?php
                     // Fetch the category name based on category_id
                     $categoryNameSql = "SELECT category_name FROM categories WHERE id = $category_id";
@@ -269,7 +260,7 @@ $result = $conn->query($sql);
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s" style="background-color: white; border-radius: 15px; overflow: hidden;">
                     <div class="package-item">
                         <div class="overflow-hidden" style="border-radius: 15px 15px 0 0;">
-                            <a class="position-relative d-block overflow-hidden" href="package_details.php?id=<?php echo $packageID; ?>">
+                            <a class="position-relative d-block overflow-hidden" href="package_details.php?id=<?php echo base64_encode($packageID); ?>">
                                 <img class="img-fluid" src="<?php echo $row['package_image']; ?>" alt="" style="width: 100%; height: 300px; object-fit: cover; border-radius: 15px 15px 0 0;">
                             </a>
                         </div>
@@ -287,22 +278,22 @@ $result = $conn->query($sql);
                             <!-- ... -->
                             <div class="d-flex justify-content-center mb-2">
                                 <!-- &nbspCall Us button with icon for larger screens -->
-                                <a href="tel:+919074460902" class="btn btn-sm btn-primary px-2 border-end d-none d-md-flex" style="border-radius: 10px; font-size: 1em; background-color: #007bff; margin-right: 10px; margin-left: 10px;">
+                                <a href="tel:+919207041904" class="btn btn-sm btn-primary px-2 border-end d-none d-md-flex" style="border-radius: 10px; font-size: 1em; background-color: #007bff; margin-right: 10px; margin-left: 10px;">
                                     <i class="fas fa-phone me-1" style="font-size: 0.8em; transform: rotate(90deg); margin-right: 30px;"></i>&nbsp;&nbsp;Call Us
                                 </a>
 
                                 <!-- WhatsApp button with icon for larger screens -->
-                                <a href="https://api.whatsapp.com/send/?phone=%2B919074460902&text&type=phone_number&app_absent=0" target="_blank" class="btn btn-sm btn-primary px-2 d-none d-md-flex" style="border-radius: 10px; font-size: 1em; background-color: #ffffff; color: #000; margin-right: 10px; transition: background-color 0.3s;" onmouseover="changeBackgroundColor(this, '#d1ffe2')" onmouseout="changeBackgroundColor(this, '#ffffff')">
+                                <a href="https://api.whatsapp.com/send/?phone=%2B919207041904&text&type=phone_number&app_absent=0" target="_blank" class="btn btn-sm btn-primary px-2 d-none d-md-flex" style="border-radius: 10px; font-size: 1em; background-color: #ffffff; color: #000; margin-right: 10px; transition: background-color 0.3s;" onmouseover="changeBackgroundColor(this, '#d1ffe2')" onmouseout="changeBackgroundColor(this, '#ffffff')">
                                     <img src="img/whatsapp-logo.png" alt="WhatsApp Logo" style="width: 1.2em; height: 1.2em; margin-right: 3px;">Chat on Whatsapp
                                 </a>
 
                                 <!-- &nbspCall Us icon-only button for smaller screens -->
-                                <a href="tel:+919074460902" class="btn btn-sm btn-primary px-2 border-end d-md-none flex-fill" style="border-radius: 10px; font-size: 1em; background-color: #007bff; margin-right: 10px; margin-left: 10px;">
+                                <a href="tel:+919207041904" class="btn btn-sm btn-primary px-2 border-end d-md-none flex-fill" style="border-radius: 10px; font-size: 1em; background-color: #007bff; margin-right: 10px; margin-left: 10px;">
                                     <i class="fas fa-phone" style="font-size: 0.8em; transform: rotate(90deg);"></i>
                                 </a>
 
                                 <!-- WhatsApp icon-only button for smaller screens -->
-                                <a href="https://api.whatsapp.com/send/?phone=%2B919074460902&text&type=phone_number&app_absent=0" target="_blank" class="btn btn-sm btn-primary px-2 d-md-none flex-fill" style="border-radius: 10px; font-size: 1em; background-color: #ffffff; color: #000; margin-right: 10px; transition: background-color 0.3s;" onmouseover="changeBackgroundColor(this, '#d1ffe2')" onmouseout="changeBackgroundColor(this, '#ffffff')">
+                                <a href="https://api.whatsapp.com/send/?phone=%2B919207041904&text&type=phone_number&app_absent=0" target="_blank" class="btn btn-sm btn-primary px-2 d-md-none flex-fill" style="border-radius: 10px; font-size: 1em; background-color: #ffffff; color: #000; margin-right: 10px; transition: background-color 0.3s;" onmouseover="changeBackgroundColor(this, '#d1ffe2')" onmouseout="changeBackgroundColor(this, '#ffffff')">
                                     <img src="img/whatsapp-logo.png" alt="WhatsApp Logo" style="width: 1.2em; height: 1.2em;">
                                 </a>
                             </div>
@@ -365,6 +356,22 @@ $result = $conn->query($sql);
         </div>
     </div>
     <!-- Footer End -->
+
+     <!-- Back to Top -->
+     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/tempusdominus/js/moment.min.js"></script>
+    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="js/main.js"></script>
 
 </body>
 

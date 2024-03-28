@@ -274,10 +274,10 @@ $conn->close();
                         </div>
                         <div class="ms-3">
                             <h5 class="text-primary">Mobile</h5>
-                            <p class="mb-0">+91 9074460902 </p>
+                            <p class="mb-0">+91 9207041904 </p>
                         </div>
                     </div>
-                    <a href="https://api.whatsapp.com/send/?phone=%2B919074460902&text&type=phone_number&app_absent=0" target="_blank" class="btn btn-primary rounded-pill py-2 px-4 transparent-background">
+                    <a href="https://api.whatsapp.com/send/?phone=%2B919207041904&text&type=phone_number&app_absent=0" target="_blank" class="btn btn-primary rounded-pill py-2 px-4 transparent-background">
                         <img src="img/whatsapp-logo.png" alt="WhatsApp Logo" style="width: 20px; height: 20px; margin-right: 5px;"> Chat on Whatsapp
                     </a>
                 </div>

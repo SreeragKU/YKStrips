@@ -305,7 +305,7 @@ if (isset($_GET['id'])) {
     <div class="container-xxl py-5">
         <?php if (isset($selectedPackage)) : ?>
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s" style="margin-top: 20px">
-                <h6 class="section-title bg-white text-center text-primary px-3"><?php echo $selectedPackage['category_name']; ?></h6>
+            <h3 class="section-title text-center text-primary px-3" style="background-color: rgba(255, 255, 255, 0.3);"><?php echo $selectedPackage['category_name']; ?></h6>
                 <h1 class="mb-5"><?php echo $selectedPackage['package_name']; ?></h1>
             </div>
             <!-- Bootstrap Carousel -->
@@ -317,7 +317,7 @@ if (isset($_GET['id'])) {
                         foreach ($galleryImages as $index => $image) {
                     ?>
                             <div class="carousel-item <?php echo ($index === 0) ? 'active' : ''; ?>">
-                                <img class="d-block w-100" src="pack_img/<?php echo $image; ?>" alt="Gallery Image <?php echo $index + 1; ?>" style="object-fit: contain; max-height: 400px;"> <!-- Adjust the max-height as needed -->
+                                <img class="d-block w-100" src="pack_img/<?php echo $image; ?>" alt="Gallery Image <?php echo $index + 1; ?>" style="object-fit: cover; max-height: 600px;"> <!-- Adjust the max-height as needed -->
                             </div>
                         <?php
                         }
@@ -325,7 +325,7 @@ if (isset($_GET['id'])) {
                         // Use the first image from $selectedPackage as a placeholder
                         ?>
                         <div class="carousel-item active">
-                            <img class="d-block w-100" src="<?php echo $selectedPackage['package_image']; ?>" alt="Placeholder Image" style="object-fit: contain; max-height: 400px;"> <!-- Adjust the max-height as needed -->
+                            <img class="d-block w-100" src="<?php echo $selectedPackage['package_image']; ?>" alt="Placeholder Image" style="object-fit: cover; max-height: 600px;"> <!-- Adjust the max-height as needed -->
                         </div>
                     <?php
                     }
@@ -342,7 +342,7 @@ if (isset($_GET['id'])) {
             </div>
 
             <div class="text-center mt-4">
-                <a href="https://api.whatsapp.com/send/?phone=%2B919074460902&text=<?php echo rawurlencode('Your message goes here'); ?>&app_absent=0" target="_blank" class="btn btn-primary rounded-3 py-2 px-4 text-center" style="color: #ffffff; background-color: #007bff; font-size: 1.4em;">
+                <a href="https://api.whatsapp.com/send/?phone=%2B919207041904&text=<?php echo rawurlencode('Your message goes here'); ?>&app_absent=0" target="_blank" class="btn btn-primary rounded-3 py-2 px-4 text-center" style="color: #ffffff; background-color: #007bff; font-size: 1.4em;">
                     <img src="img/whatsapp-logo.png" alt="WhatsApp Logo" style="width: 20px; height: 20px; margin-right: 5px;"> Chat on Whatsapp
                 </a>
             </div>

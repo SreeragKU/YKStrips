@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mes = $_POST["mes"];
 
         // Your WhatsApp number to receive the message
-        $yourNumber = "+919074460902"; // Change this to your actual WhatsApp number
+        $yourNumber = "+919207041904"; // Change this to your actual WhatsApp number
 
         // WhatsApp API URL
         $apiUrl = "https://api.whatsapp.com/send/?phone=$yourNumber";

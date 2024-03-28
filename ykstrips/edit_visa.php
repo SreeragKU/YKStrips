@@ -1,6 +1,18 @@
 <?php
 include "conn.php";
 
+echo "<script>
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'login.php';
+            }
+
+            function logout() {
+                localStorage.removeItem('token');
+                window.location.href = 'login.php';
+            }
+          </script>";
+
 if (isset($_GET['id'])) {
     $visaId = $_GET['id'];
 
@@ -414,7 +426,29 @@ if (isset($_POST['submit'])) {
             tabs.forEach(tab => tab.style.display = 'none');
             document.getElementById(tabName).style.display = 'block';
         }
+        document.addEventListener('DOMContentLoaded', function () {
+    const textareas = document.querySelectorAll('textarea');
+
+    textareas.forEach(textarea => {
+        textarea.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const { selectionStart, selectionEnd, value } = event.target;
+                const newValue =
+                    value.substring(0, selectionStart) +
+                    '<br>' +
+                    value.substring(selectionEnd);
+
+                event.target.value = newValue;
+                event.target.selectionStart = selectionStart + 4; // Move cursor past the inserted '<br>'
+                event.target.selectionEnd = selectionStart + 4; // Move cursor past the inserted '<br>'
+            }
+        });
+    });
+});
+
     </script>
 </body>
+
 
 </html>

@@ -195,7 +195,7 @@ if (isset($_GET['destination_id'])) {
     </style>
     <style>
         body {
-            background-image: url('img/background-2.png');
+            background-image: url('img/visabg.png');
             background-repeat: repeat;
             background-size: 300px 300px;
             background-position: center center;
@@ -361,8 +361,6 @@ if (isset($_GET['destination_id'])) {
         }
     </style>
 
-
-
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
 
@@ -390,11 +388,9 @@ if (isset($_GET['destination_id'])) {
 
 <body>
 
-    <body>
+    <?php include "header.php"; ?>
 
-        <?php include "header.php"; ?>
-
-        <section id="hero-section" style="
+    <section id="hero-section" style="
             background-image: url('<?php echo $visaDetails['background_image_path']; ?>');
             background-size: cover;
             height: 700px;
@@ -404,7 +400,7 @@ if (isset($_GET['destination_id'])) {
             justify-content: center; /* Vertical centering */
             ">
 
-            <div class="hero-content" style="
+        <div class="hero-content" style="
                 font-family: 'Roboto', sans-serif;
                 color: #fff;
                 font-weight: bold;
@@ -414,147 +410,174 @@ if (isset($_GET['destination_id'])) {
                 max-width: 80%; /* Optional to limit content width */
             ">
 
-                <h1 style="
+            <h1 style="
                     font-size: 3rem;
                     margin-bottom: 1rem;
                     text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3); /* Subtle drop shadow */
                     ">
-                    <?php echo $visaDetails['destination']; ?>
-                </h1>
+                <?php echo $visaDetails['destination']; ?>
+            </h1>
 
-                <h3 style="
+            <h3 style="
                     font-size: 1.5rem;
                     margin-bottom: 0.5rem;
                     ">
-                    Processing Time: <?php echo $visaDetails['processing_time']; ?>
-                </h3>
+                Processing Time: <?php echo $visaDetails['processing_time']; ?>
+            </h3>
 
-                <p style="
+            <p style="
                     font-size: 1.2rem;
                     margin-bottom: 1rem; /* Add some bottom margin for better spacing */
                     ">
-                    Starting From: ₹ <?php echo $visaDetails['starting_from']; ?> /-
-                </p>
-            </div>
-        </section>
+                Starting From: ₹ <?php echo $visaDetails['starting_from']; ?> /-
+            </p>
+        </div>
+    </section>
 
-        <section id="visa-types-section">
-            <div class="visa-cards-container">
-                <?php
-                $titles = unserialize($visaDetails['titles']);
-                $processing_times = unserialize($visaDetails['processing_times']);
-                $stay_periods = unserialize($visaDetails['stay_periods']);
-                $validities = unserialize($visaDetails['validities']);
-                $entry_types = unserialize($visaDetails['entry_types']);
-                $number_of_entries = unserialize($visaDetails['number_of_entries']);
-                $single_fees = unserialize($visaDetails['single_fees']);
+    <section id="visa-types-section">
+        <div class="visa-cards-container d-flex justify-content-center" style="margin-left: 10px;">
+            <?php
+            $titles = unserialize($visaDetails['titles']);
+            $processing_times = unserialize($visaDetails['processing_times']);
+            $stay_periods = unserialize($visaDetails['stay_periods']);
+            $validities = unserialize($visaDetails['validities']);
+            $entry_types = unserialize($visaDetails['entry_types']);
+            $number_of_entries = unserialize($visaDetails['number_of_entries']);
+            $single_fees = unserialize($visaDetails['single_fees']);
 
-                foreach ($titles as $index => $title) :
-                ?>
-                    <div class="visa-card" style="
-                    border: 2px solid #007bff; 
-                    border-radius: 15px; 
-                    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); 
-                    margin: 10px;
-                    background-color: #ffffff; 
-                    height: 450px;
-                    position: relative;
-                    ">
-                        <h2 style="color: #007bff; /* Set title color */"><?php echo $title; ?></h2>
-                        <p><strong>Processing Time:</strong> <?php echo $processing_times[$index]; ?></p>
-                        <p><strong>Stay Period:</strong> <?php echo $stay_periods[$index]; ?></p>
-                        <p><strong>Validity:</strong> <?php echo $validities[$index]; ?></p>
-                        <p><strong>Entry Type:</strong> <?php echo $entry_types[$index]; ?></p>
-                        <p><strong>Number of Entries:</strong> <?php echo $number_of_entries[$index]; ?></p>
-                        <p><strong>Single Fees:</strong> <?php echo $single_fees[$index]; ?></p>
-                        <!-- ... -->
-                        <div class="d-flex justify-content-center mb-2" style="position: absolute !important; bottom: 0; width: 100%;">
-                            <!-- &nbspCall Us button with icon for larger screens -->
-                            <a href="tel:+919074460902" class="btn btn-sm btn-primary px-2 border-end d-none d-md-flex" style="border-radius: 10px; font-size: 1em; background-color: #007bff; margin-right: 10px; margin-left: 10px;">
-                                <i class="fas fa-phone me-1" style="font-size: 0.8em; transform: rotate(90deg); margin-right: 30px;"></i>&nbsp;&nbsp;Call Us
-                            </a>
+            foreach ($titles as $index => $title) :
+            ?>
+                <div class="visa-card" style="
+                border: 2px solid #007bff; 
+                border-radius: 15px; 
+                box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); 
+                margin: 30px;
+                background-color: #ffffff; 
+                height: 450px;
+                position: relative;
+                ">
 
-                            <!-- WhatsApp button with icon for larger screens -->
-                            <a href="https://api.whatsapp.com/send/?phone=%2B919074460902&text&type=phone_number&app_absent=0" target="_blank" class="btn btn-sm btn-primary px-2 d-none d-md-flex" style="border-radius: 10px; font-size: 1em; background-color: #ffffff; color: #000; margin-right: 10px; transition: background-color 0.3s;" onmouseover="changeBackgroundColor(this, '#d1ffe2')" onmouseout="changeBackgroundColor(this, '#ffffff')">
-                                <img src="img/whatsapp-logo.png" alt="WhatsApp Logo" style="width: 1.2em; height: 1.2em; margin-right: 3px;">Chat on Whatsapp
-                            </a>
+                    <h2 style="color: #007bff;">
+                        <center><?php echo $title; ?></center>
+                    </h2>
 
-                            <!-- &nbspCall Us icon-only button for smaller screens -->
-                            <a href="tel:+919074460902" class="btn btn-sm btn-primary px-2 border-end d-md-none flex-fill" style="border-radius: 10px; font-size: 1em; background-color: #007bff; margin-right: 10px; margin-left: 10px;">
-                                <i class="fas fa-phone" style="font-size: 0.8em; transform: rotate(90deg);"></i>
-                            </a>
+                    <p onmouseover="growAndHighlight(this)" onmouseout="resetStyles(this)" style="margin-left: 10px;">
+                        <strong><i class="fas fa-clock"></i> Processing Time:</strong> <?php echo $processing_times[$index]; ?>
+                    </p>
+                    <p onmouseover="growAndHighlight(this)" onmouseout="resetStyles(this)" style="margin-left: 10px;">
+                        <strong><i class="fas fa-calendar-alt"></i> Stay Period:</strong> <?php echo $stay_periods[$index]; ?>
+                    </p>
+                    <p onmouseover="growAndHighlight(this)" onmouseout="resetStyles(this)" style="margin-left: 10px;">
+                        <strong><i class="fas fa-calendar-check"></i> Validity:</strong> <?php echo $validities[$index]; ?>
+                    </p>
+                    <p onmouseover="growAndHighlight(this)" onmouseout="resetStyles(this)" style="margin-left: 10px;">
+                        <strong><i class="fas fa-plane"></i> Entry Type:</strong> <?php echo $entry_types[$index]; ?>
+                    </p>
+                    <p onmouseover="growAndHighlight(this)" onmouseout="resetStyles(this)" style="margin-left: 10px;">
+                        <strong><i class="fas fa-sort-numeric-up"></i> Number of Entries:</strong> <?php echo $number_of_entries[$index]; ?>
+                    </p>
+                    <p onmouseover="growAndHighlight(this)" onmouseout="resetStyles(this)" style="margin-left: 10px;">
+                        <strong><i class="fas fa-dollar-sign"></i> Single Fees:</strong> <?php echo $single_fees[$index]; ?>
+                    </p>
+                    <!-- ... -->
+                    <div class="d-flex justify-content-center mb-2" style="position: absolute !important; bottom: 0; width: 100%;">
+                        <!-- &nbspCall Us button with icon for larger screens -->
+                        <a href="tel:+919207041904" class="btn btn-sm btn-primary px-2 border-end d-none d-md-flex" style="border-radius: 10px; font-size: 1em; background-color: #007bff; margin-right: 10px; margin-left: 10px;">
+                            <i class="fas fa-phone me-1" style="font-size: 0.8em; transform: rotate(90deg); margin-right: 30px;"></i>&nbsp;&nbsp;Call Us
+                        </a>
 
-                            <!-- WhatsApp icon-only button for smaller screens -->
-                            <a href="https://api.whatsapp.com/send/?phone=%2B919074460902&text&type=phone_number&app_absent=0" target="_blank" class="btn btn-sm btn-primary px-2 d-md-none flex-fill" style="border-radius: 10px; font-size: 1em; background-color: #ffffff; color: #000; margin-right: 10px; transition: background-color 0.3s;" onmouseover="changeBackgroundColor(this, '#d1ffe2')" onmouseout="changeBackgroundColor(this, '#ffffff')">
-                                <img src="img/whatsapp-logo.png" alt="WhatsApp Logo" style="width: 1.2em; height: 1.2em;">
-                            </a>
+                        <!-- WhatsApp button with icon for larger screens -->
+                        <a href="https://api.whatsapp.com/send/?phone=%2B919207041904&text&type=phone_number&app_absent=0" target="_blank" class="btn btn-sm btn-primary px-2 d-none d-md-flex" style="border-radius: 10px; font-size: 1em; background-color: #ffffff; color: #000; margin-right: 10px; transition: background-color 0.3s;" onmouseover="changeBackgroundColor(this, '#d1ffe2')" onmouseout="changeBackgroundColor(this, '#ffffff')">
+                            <img src="img/whatsapp-logo.png" alt="WhatsApp Logo" style="width: 1.2em; height: 1.2em; margin-right: 3px;">Chat on Whatsapp
+                        </a>
 
-                            <script>
-                                function changeBackgroundColor(element, color) {
-                                    element.style.backgroundColor = color;
-                                }
-                            </script>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </section>
-        <section id="details-container">
-            <section id="details-section">
-                <?php
-                function displayDetailSection($title, $data, $iconClass)
-                {
-                    if (is_array($data)) {
-                        echo "<h3><i class='bi {$iconClass}'></i> {$title}</h3>";
-                        foreach ($data as $detail) {
-                            // Split the detail string into sentences using "<br>" as the delimiter
-                            $sentences = explode("<br>", $detail);
+                        <!-- &nbspCall Us icon-only button for smaller screens -->
+                        <a href="tel:+919207041904" class="btn btn-sm btn-primary px-2 border-end d-md-none flex-fill" style="border-radius: 10px; font-size: 1em; background-color: #007bff; margin-right: 10px; margin-left: 10px;">
+                            <i class="fas fa-phone" style="font-size: 0.8em; transform: rotate(90deg);"></i>
+                        </a>
 
-                            // Begin a paragraph with a custom-styled bullet point
-                            echo "<ul class='custom-bullet-list'>";
-                            foreach ($sentences as $sentence) {
-                                echo "<li> {$sentence}</li>";
+                        <!-- WhatsApp icon-only button for smaller screens -->
+                        <a href="https://api.whatsapp.com/send/?phone=%2B919207041904&text&type=phone_number&app_absent=0" target="_blank" class="btn btn-sm btn-primary px-2 d-md-none flex-fill" style="border-radius: 10px; font-size: 1em; background-color: #ffffff; color: #000; margin-right: 10px; transition: background-color 0.3s;" onmouseover="changeBackgroundColor(this, '#d1ffe2')" onmouseout="changeBackgroundColor(this, '#ffffff')">
+                            <img src="img/whatsapp-logo.png" alt="WhatsApp Logo" style="width: 1.2em; height: 1.2em;">
+                        </a>
+
+                        <script>
+                            function changeBackgroundColor(element, color) {
+                                element.style.backgroundColor = color;
                             }
-                            echo "</ul>";
+                        </script>
+                        <script>
+                            function growAndHighlight(element) {
+                                element.style.transform = 'scale(1.1)';
+                                element.style.transition = 'transform 0.3s ease';
+                                element.style.color = 'darkcyan';
+                            }
+
+                            function resetStyles(element) {
+                                element.style.transform = 'scale(1)';
+                                element.style.color = '';
+                                element.style.transition = '';
+                            }
+                        </script>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </section>
+    
+    <section id="details-container">
+        <section id="details-section">
+            <?php
+            function displayDetailSection($title, $data, $iconClass)
+            {
+                if (is_array($data)) {
+                    echo "<h3><i class='bi {$iconClass}'></i> {$title}</h3>";
+                    foreach ($data as $detail) {
+                        $sentences = explode("<br>", $detail);
+                        echo "<ul class='custom-bullet-list'>";
+                        foreach ($sentences as $sentence) {
+                            echo "<li> {$sentence}</li>";
                         }
+                        echo "</ul>";
                     }
                 }
+            }
 
-                displayDetailSection("Visa Price Includes", unserialize($visaDetails['visa_price_includes']), 'bi-currency-dollar');
-                displayDetailSection("Documents Required", unserialize($visaDetails['documents_required']), 'bi-file-earmark-text');
-                displayDetailSection("Visa FAQs", unserialize($visaDetails['visa_faqs']), 'bi-question-circle');
-                displayDetailSection("Steps to Get Visa", unserialize($visaDetails['steps_to_get_visa']), 'bi-check-circle');
-                displayDetailSection("Visa Requirements", unserialize($visaDetails['visa_requirements']), 'bi-file-earmark-check');
-                displayDetailSection("Travel Checklist", unserialize($visaDetails['travel_checklist']), 'bi-list-check');
-                displayDetailSection("What to Do When Arrive", unserialize($visaDetails['what_to_do_when_arrive']), 'bi-info-circle');
-                displayDetailSection("Travel Guide", unserialize($visaDetails['travel_guide']), 'bi-book');
-                displayDetailSection("Reasons for Rejection", unserialize($visaDetails['reasons_for_rejection']), 'bi-x-circle');
-                displayDetailSection("Services Terms Conditions", unserialize($visaDetails['services_terms_conditions']), 'bi-file-earmark-text');
-                ?>
+            displayDetailSection("Visa Price Includes", unserialize($visaDetails['visa_price_includes']), 'fas fa-ticket-alt');
+            displayDetailSection("Documents Required", unserialize($visaDetails['documents_required']), 'bi-file-earmark-text');
+            displayDetailSection("Visa FAQs", unserialize($visaDetails['visa_faqs']), 'bi-question-circle');
+            displayDetailSection("Steps to Get Visa", unserialize($visaDetails['steps_to_get_visa']), 'bi-check-circle');
+            displayDetailSection("Visa Requirements", unserialize($visaDetails['visa_requirements']), 'bi-file-earmark-check');
+            displayDetailSection("Travel Checklist", unserialize($visaDetails['travel_checklist']), 'bi-list-check');
+            displayDetailSection("What to Do When Arrive", unserialize($visaDetails['what_to_do_when_arrive']), 'bi-info-circle');
+            displayDetailSection("Travel Guide", unserialize($visaDetails['travel_guide']), 'bi-book');
+            displayDetailSection("Reasons for Rejection", unserialize($visaDetails['reasons_for_rejection']), 'bi-x-circle');
+            displayDetailSection("Services Terms Conditions", unserialize($visaDetails['services_terms_conditions']), 'bi-file-earmark-text');
+            ?>
 
-            </section>
         </section>
-        <?php include "footer.php"; ?>
+    </section>
+    <?php include "footer.php"; ?>
 
 
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 
 
-        <!-- JavaScript Libraries -->
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="lib/wow/wow.min.js"></script>
-        <script src="lib/easing/easing.min.js"></script>
-        <script src="lib/waypoints/waypoints.min.js"></script>
-        <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-        <script src="lib/tempusdominus/js/moment.min.js"></script>
-        <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
-        <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/tempusdominus/js/moment.min.js"></script>
+    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
-        <!-- Template Javascript -->
-        <script src="js/main.js"></script>
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
 
-    </body>
+</body>
 
 </html>

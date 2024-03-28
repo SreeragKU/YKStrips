@@ -221,7 +221,7 @@ while ($row = $visaResult->fetch_assoc()) {
     </style>
     <style>
         body {
-            background-image: url('img/background-2.png');
+            background-image: url('img/visabg.png');
             background-repeat: repeat;
             background-size: 300px 300px;
             background-position: center center;
@@ -269,14 +269,17 @@ while ($row = $visaResult->fetch_assoc()) {
 
     <div class="visa-cards-container">
         <?php foreach ($visaData as $visa) : ?>
-            <a href="visa_details.php?destination_id=<?php echo base64_encode($visa['id']); ?>" class="visa-card">
+            <a href="visa_details.php?destination_id=<?php echo base64_encode($visa['id']); ?>" class="visa-card" style="text-decoration: none; color: inherit; display: block;">
                 <img src="<?php echo $visa['destination_icon_path']; ?>" alt="Destination Icon">
-                <h2><center><?php echo $visa['destination']; ?></center></h2>
-                <p>Processing Time: <?php echo $visa['processing_time']; ?></p>
-                <p>Starting From: ₹ <?php echo $visa['starting_from']; ?> /-</p>
+                <h2>
+                    <center><?php echo $visa['destination']; ?></center>
+                </h2>
+                <p><i class="fas fa-clock"></i> Processing Time: <b><?php echo $visa['processing_time']; ?></b></p>
+                <p><i class="fas fa-money-bill-alt"></i> Starting From: <b>₹ <?php echo $visa['starting_from']; ?> /-</b> </p>
             </a>
         <?php endforeach; ?>
     </div>
+
 
 
     <?php include "footer.php"; ?>

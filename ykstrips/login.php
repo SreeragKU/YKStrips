@@ -1,7 +1,7 @@
 <?php
 // Define the correct username and password
-$correctUsername = '';
-$correctPassword = '';
+$correctUsername = 'ykstrip';
+$correctPassword = 'Ykstrip!20';
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Store the token in the local storage
         echo "<script>
                 localStorage.setItem('token', '$token');
-                window.location.href = 'dashboard.php';
+                window.location.href = 'viewall.php';
               </script>";
         exit;
     } else {

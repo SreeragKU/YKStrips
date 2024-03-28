@@ -314,7 +314,7 @@ if ($result->num_rows > 0) {
     <div class="container-xxl py-5 destination">
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h2 class="section-title bg-white text-center text-primary px-3" style="margin-top: 30px; margin-bottom: 30px;">TRENDING</h2>
+                <h2 class="section-title text-center text-primary px-3" style="margin-top: 30px; margin-bottom: 30px;">TRENDING</h2>
                 <h1 class="mb-5">Expert Curated Trips</h1>
             </div>
             <div class="slider-container">
@@ -325,14 +325,14 @@ if ($result->num_rows > 0) {
                     ?>
                         <div class="col-lg-4 col-md-12 wow zoomIn slider-item" data-wow-delay="0.1s" style="background-color: white; border-radius: 15px; overflow: hidden;">
                             <div class="destination-card">
-                                <a style="width: 100%; height: 300px; object-fit: cover; border-radius: 15px 15px 0 0;" class="position-relative d-block overflow-hidden" href="package_details.php?id=<?php echo base64_encode($package['id']); ?>">>
+                                <a style="width: 100%; height: 300px; object-fit: cover; border-radius: 15px 15px 0 0;" class="position-relative d-block overflow-hidden" href="package_details.php?id=<?php echo base64_encode($package['id']); ?>">
                                     <img class="img-fluid" src="<?php echo $package['image']; ?>" alt="">
                                 </a>
                                 <div class="destination-info">
+                                    <div class="bg-white text-success fw-bold py-1 px-2" style="font-size: 25px;"><?php echo $package['packageName']; ?></div>
                                     <div class="bg-white text-danger fw-bold py-1 px-2"><?php echo number_format($package['discountPercentage'], 0); ?>% OFF</div>
-                                    <div class="bg-white text-primary fw-bold py-1 px-2"><?php echo $package['packageName']; ?></div>
                                     <h3 class="mb-0">₹<?php echo number_format($package['discount_price'], 2); ?></h3>
-                                    <h6 class="mb-0"><s>₹<?php echo number_format($package['package_price'], 2); ?></s></h6>
+                                    <h6 class="mb-4"><s>₹<?php echo number_format($package['package_price'], 2); ?></s></h6>
                                 </div>
                                 <!-- ... -->
                                 <div class="d-flex justify-content-center mb-2">
@@ -386,96 +386,104 @@ if ($result->num_rows > 0) {
         <div class="container">
             <?php foreach ($categoriesPackages as $category) : ?>
                 <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                    <h2 class="section-title bg-white text-center text-primary px-3" style="margin-top: 30px; margin-bottom: 30px;"><?php echo $category['category_name']; ?></h2>
+                    <div>
+                        <h1 class="text-left text-primary px-3" style="margin-top: 30px; margin-bottom: 25px;"><?php echo $category['category_name']; ?>
+                            <a href="category_page.php?category_id=<?php echo base64_encode($category['id']); ?>" class="btn btn-primary">View All</a>
+                        </h1>
+                    </div>
                 </div>
 
-                <div class="row g-4 justify-content-center">
-                    <?php
-                    // Counter for packages in each category
-                    $packageCounter = 0;
+                <!-- Create carousel for each category -->
+                <div id="carousel-<?php echo $category['id']; ?>" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <?php
+                        // Counter for packages in each category
+                        $packageCounter = 0;
 
-                    // Loop through the query result for each category
-                    while ($row = $resultPackages->fetch_assoc()) {
-                        // Check if the package belongs to the current category
-                        if ($row['category_id'] == $category['id']) {
-                            $discountPercentage = ($row['package_price'] - $row['discount_price']) / $row['package_price'] * 100;
-                            $packageID = $row['id'];
-                            $packageCounter++;
+                        // Loop through the query result for each category
+                        while ($row = $resultPackages->fetch_assoc()) {
+                            // Check if the package belongs to the current category
+                            if ($row['category_id'] == $category['id']) {
+                                $discountPercentage = ($row['package_price'] - $row['discount_price']) / $row['package_price'] * 100;
+                                $packageID = $row['id'];
+                                $packageCounter++;
 
-                            // Display only the first 3 packages
-                            if ($packageCounter <= 3) {
-                    ?>
-                                <!-- Display package -->
-                                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s" style="background-color: white; border-radius: 15px; overflow: hidden;">
-                                    <div class="package-item">
-                                        <div class="overflow-hidden">
-                                            <a class="position-relative d-block overflow-hidden" href="package_details.php?id=<?php echo base64_encode($packageID); ?>">
-                                                <img class="img-fluid" src="<?php echo $row['package_image']; ?>" alt="" style="width: 100%; height: 300px; object-fit: cover; border-radius: 15px 15px 0 0;">
-                                            </a>
-                                        </div>
-                                        <div class="d-flex border-bottom">
-                                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i><?php echo $row['no_of_days']; ?> days</small>
-                                            <small class="flex-fill text-center py-2"><i class="fa fa-map-marker-alt text-primary me-2"></i><?php echo $row['locations']; ?></small>
-                                        </div>
-                                        <div class="text-center p-4">
-                                            <div class="bg-white text-success fw-bold py-1 px-2" style="font-size: 20px;"><?php echo $row['package_name']; ?></div>
-                                            <div class="bg-white text-danger fw-bold py-1 px-2"><?php echo number_format($discountPercentage, 0) . '% OFF'; ?></div>
-                                            <h3 class="mb-0">₹<?php echo number_format($row['discount_price'], 2); ?></h3>
-                                            <h6 class="mb-0"><s>₹<?php echo number_format($row['package_price'], 2); ?></s></h6>
-                                            <div class="mb-3">
-                                            </div>
-                                            <!-- ... -->
-                                            <div class="d-flex justify-content-center mb-2">
-                                                <!-- &nbspCall Us button with icon for larger screens -->
-                                                <a href="tel:+919074460902" class="btn btn-sm btn-primary px-2 border-end d-none d-md-flex" style="border-radius: 10px; font-size: 1em; background-color: #007bff; margin-right: 10px; margin-left: 10px;">
-                                                    <i class="fas fa-phone me-1" style="font-size: 0.8em; transform: rotate(90deg); margin-right: 30px;"></i>&nbsp;&nbsp;Call Us
-                                                </a>
-
-                                                <!-- WhatsApp button with icon for larger screens -->
-                                                <a href="https://api.whatsapp.com/send/?phone=%2B919074460902&text&type=phone_number&app_absent=0" target="_blank" class="btn btn-sm btn-primary px-2 d-none d-md-flex" style="border-radius: 10px; font-size: 1em; background-color: #ffffff; color: #000; margin-right: 10px; transition: background-color 0.3s;" onmouseover="changeBackgroundColor(this, '#d1ffe2')" onmouseout="changeBackgroundColor(this, '#ffffff')">
-                                                    <img src="img/whatsapp-logo.png" alt="WhatsApp Logo" style="width: 1.2em; height: 1.2em; margin-right: 3px;">Chat on Whatsapp
-                                                </a>
-
-                                                <!-- &nbspCall Us icon-only button for smaller screens -->
-                                                <a href="tel:+919074460902" class="btn btn-sm btn-primary px-2 border-end d-md-none flex-fill" style="border-radius: 10px; font-size: 1em; background-color: #007bff; margin-right: 10px; margin-left: 10px;">
-                                                    <i class="fas fa-phone" style="font-size: 0.8em; transform: rotate(90deg);"></i>
-                                                </a>
-
-                                                <!-- WhatsApp icon-only button for smaller screens -->
-                                                <a href="https://api.whatsapp.com/send/?phone=%2B919074460902&text&type=phone_number&app_absent=0" target="_blank" class="btn btn-sm btn-primary px-2 d-md-none flex-fill" style="border-radius: 10px; font-size: 1em; background-color: #ffffff; color: #000; margin-right: 10px; transition: background-color 0.3s;" onmouseover="changeBackgroundColor(this, '#d1ffe2')" onmouseout="changeBackgroundColor(this, '#ffffff')">
-                                                    <img src="img/whatsapp-logo.png" alt="WhatsApp Logo" style="width: 1.2em; height: 1.2em;">
+                                // Determine if this package is the first one to be displayed
+                                $activeClass = ($packageCounter == 1) ? 'active' : '';
+                        ?>
+                                <!-- Display package as carousel item -->
+                                <div class="carousel-item <?php echo $activeClass; ?>">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="overflow-hidden">
+                                                <a class="position-relative d-block overflow-hidden" href="package_details.php?id=<?php echo base64_encode($packageID); ?>">
+                                                    <img class="img-fluid" src="<?php echo $row['package_image']; ?>" alt="" style="width: 100%; height: 300px; object-fit: cover; border-radius: 15px;">
                                                 </a>
                                             </div>
-
-                                            <script>
-                                                function changeBackgroundColor(element, color) {
-                                                    element.style.backgroundColor = color;
-                                                }
-                                            </script>
-                                            <!-- ... -->
                                         </div>
+                                        <div class="col-lg-6">
+                                            <div class="text-center" style="background-color: #ffffff; border-radius: 15px; height: 300px;">
+                                                <div class="bg-white text-success fw-bold py-1 px-2 py-2" style="font-size: 30px;"><?php echo $row['package_name']; ?></div>
+                                                <div class="text-danger fw-bold py-2 mb-2"><?php echo number_format($discountPercentage, 0) . '% OFF'; ?></div>
+                                                <div class="price-container">
+                                                    <h3 class="mb-2">₹<?php echo number_format($row['discount_price'], 2); ?></h3>
+                                                    <h6 class="mb-"><s>₹<?php echo number_format($row['package_price'], 2); ?></s></h6>
+                                                </div>
+                                                <!-- ... -->
+                                                <div class="d-flex justify-content-center mb-2">
+                                                    <!-- &nbspCall Us button with icon for larger screens -->
+                                                    <a href="tel:+919207041904" class="btn btn-sm btn-primary px-2 border-end d-none d-md-flex" style="border-radius: 10px; font-size: 1em; background-color: #007bff; margin-right: 10px; margin-left: 10px;">
+                                                        <i class="fas fa-phone me-1" style="font-size: 0.8em; transform: rotate(90deg); margin-right: 30px;"></i>&nbsp;&nbsp;Call Us
+                                                    </a>
+
+                                                    <!-- WhatsApp button with icon for larger screens -->
+                                                    <a href="https://api.whatsapp.com/send/?phone=%2B919207041904&text&type=phone_number&app_absent=0" target="_blank" class="btn btn-sm btn-primary px-2 d-none d-md-flex" style="border-radius: 10px; font-size: 1em; background-color: #ffffff; color: #000; margin-right: 10px; transition: background-color 0.3s;" onmouseover="changeBackgroundColor(this, '#d1ffe2')" onmouseout="changeBackgroundColor(this, '#ffffff')">
+                                                        <img src="img/whatsapp-logo.png" alt="WhatsApp Logo" style="width: 1.2em; height: 1.2em; margin-right: 3px;">Chat on Whatsapp
+                                                    </a>
+
+                                                    <!-- &nbspCall Us icon-only button for smaller screens -->
+                                                    <a href="tel:+919207041904" class="btn btn-sm btn-primary px-2 border-end d-md-none flex-fill" style="border-radius: 10px; font-size: 1em; background-color: #007bff; margin-right: 10px; margin-left: 10px;">
+                                                        <i class="fas fa-phone" style="font-size: 0.8em; transform: rotate(90deg);"></i>
+                                                    </a>
+
+                                                    <!-- WhatsApp icon-only button for smaller screens -->
+                                                    <a href="https://api.whatsapp.com/send/?phone=%2B919207041904&text&type=phone_number&app_absent=0" target="_blank" class="btn btn-sm btn-primary px-2 d-md-none flex-fill" style="border-radius: 10px; font-size: 1em; background-color: #ffffff; color: #000; margin-right: 10px; transition: background-color 0.3s;" onmouseover="changeBackgroundColor(this, '#d1ffe2')" onmouseout="changeBackgroundColor(this, '#ffffff')">
+                                                        <img src="img/whatsapp-logo.png" alt="WhatsApp Logo" style="width: 1.2em; height: 1.2em;">
+                                                    </a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
-                    <?php
+                        <?php
                             }
                         }
-                    }
-                    // Reset the result pointer after each category
-                    $resultPackages->data_seek(0);
-                    ?>
-                </div>
-
-                <!-- "View All" arrow for categories with more than 3 packages -->
-                <?php if ($packageCounter > 3) : ?>
-                    <div class="text-center mt-3 mb-4">
-                        <a href="category_page.php?category_id=<?php echo $category['id']; ?>" class="btn btn-primary">View All</a>
+                        // Reset the result pointer after each category
+                        $resultPackages->data_seek(0);
+                        ?>
                     </div>
-                <?php endif; ?>
+
+                    <!-- Carousel controls -->
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel-<?php echo $category['id']; ?>" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel-<?php echo $category['id']; ?>" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
 
             <?php endforeach; ?>
         </div>
     </div>
     <!-- Package End -->
+
+
+
+
 
     <?php include "footer.php"; ?>
 

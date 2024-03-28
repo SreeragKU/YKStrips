@@ -196,7 +196,7 @@ while ($row = $categoryResultPackages->fetch_assoc()) {
         }
 
         .btn-primary.active {
-            background-color: #3498db !important;
+            background-color: #007bff !important;
             color: #fff !important;
         }
     </style>
@@ -261,10 +261,10 @@ while ($row = $categoryResultPackages->fetch_assoc()) {
     </div>
     <div style="display: flex; justify-content: space-around; margin-top: 15px; margin-bottom: 5px">
         <form id="navigationForm" style="display: flex; width: 100%; max-width: 600px;">
-            <button type="submit" class="btn btn-primary" id="tripsBtn" data-page="index.php" style="flex: 1; border: 2px solid #008080; outline: none; cursor: pointer; background-color: #fff; color: #000000; font-size: 16px; border-radius: 0; transition: background-color 0.3s;">
+            <button type="submit" class="btn btn-primary" id="tripsBtn" data-page="index.php" style="flex: 1; border: 2px solid #007bff; outline: none; cursor: pointer; background-color: #fff; color: #000000; font-size: 16px; border-top-left-radius: 15px; border-bottom-left-radius: 15px; border-right: none; transition: background-color 0.3s;">
                 <i class="fas fa-plane"></i> Trips
             </button>
-            <button type="submit" class="btn btn-primary" id="visaBtn" data-page="visa_card.php" style="flex: 1; border: 2px solid #008080; outline: none; cursor: pointer; background-color: #fff; color: #000000; font-size: 16px; border-radius: 0; transition: background-color 0.3s;">
+            <button type="submit" class="btn btn-primary" id="visaBtn" data-page="visa_card.php" style="flex: 1; border: 2px solid #007bff; outline: none; cursor: pointer; background-color: #fff; color: #000000; font-size: 16px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-left: none; transition: background-color 0.3s;">
                 <i class="fas fa-credit-card"></i> Visa
             </button>
         </form>
@@ -297,39 +297,33 @@ while ($row = $categoryResultPackages->fetch_assoc()) {
                 }
             });
 
-            // Handle form submission
-            $("#navigationForm").on("submit", function(e) {
-                e.preventDefault(); // Prevent the default form submission
+            function highlightActiveButton() {
+                var currentPage = window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1);
+                var tripsPages = ["index.php", "category_page.php", "contact.php", "about.php", "package_details.php", "package.php", "thank_you.php"];
+                var visaPages = ["visa_card.php", "visa_details.php"];
+                var activeButtonId = tripsPages.includes(currentPage) ? "tripsBtn" : "visaBtn";
 
-                // Get the active button's data-page attribute value
-                var activePage = $("button.active").data("page");
-
-                // Redirect to the specified page
-                window.location.href = activePage;
-            });
+                $("button.btn-primary").removeClass("active");
+                $("#" + activeButtonId).addClass("active");
+            }
 
             // Handle button clicks
-            $("#tripsBtn, #visaBtn").on("click", function() {
-                // Remove the "active" class from all buttons
-                $("button.btn-primary").removeClass("active");
-
-                // Add the "active" class to the clicked button
-                $(this).addClass("active");
-
-                // Set the activeButton value in local storage
-                var buttonId = $(this).attr("id");
-                localStorage.setItem("activeButton", buttonId);
-                console.log("Active Button set to: " + buttonId);
+            $("#tripsBtn").on("click", function() {
+                window.location.href = "index.php";
             });
 
-            // Check and highlight the active button on page load
-            var activeButton = localStorage.getItem("activeButton");
-            console.log("Retrieved Active Button: " + activeButton);
-            if (activeButton === "tripsBtn") {
-                $("#tripsBtn").addClass("active");
-            } else if (activeButton === "visaBtn") {
-                $("#visaBtn").addClass("active");
-            }
+            $("#visaBtn").on("click", function() {
+                window.location.href = "visa_card.php";
+            });
+
+            // Handle form submission
+            $("#navigationForm").on("submit", function(e) {
+                e.preventDefault();
+                highlightActiveButton();
+            });
+
+            // Initial highlighting
+            highlightActiveButton();
         });
     </script>
 

@@ -1,6 +1,18 @@
 <?php
 include 'conn.php';
 
+echo "<script>
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'login.php';
+            }
+
+            function logout() {
+                localStorage.removeItem('token');
+                window.location.href = 'login.php';
+            }
+          </script>";
+
 if (isset($_GET['id'])) {
     $packageId = $_GET['id'];
 

@@ -1,4 +1,15 @@
 <?php
+echo "<script>
+const token = localStorage.getItem('token');
+if (!token) {
+    window.location.href = 'login.php';
+}
+
+function logout() {
+    localStorage.removeItem('token');
+    window.location.href = 'login.php';
+}
+</script>";
 // Include database connection file (conn.php)
 include 'conn.php';
 

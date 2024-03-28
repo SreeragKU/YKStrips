@@ -117,6 +117,12 @@
     <!-- Footer End -->
 
     <script src="" async defer></script>
+    <script>
+    // Scroll to the top on page reload
+    window.onload = function () {
+        window.scrollTo(0, 0);
+    };
+</script>
 </body>
 
 </html>

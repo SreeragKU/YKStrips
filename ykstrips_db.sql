@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 19, 2024 at 05:05 AM
+-- Generation Time: Mar 26, 2024 at 12:36 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -58,15 +58,15 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `category_name`, `icon_path`) VALUES
-(1, 'Kerala', 'icons/Kerala (1).png'),
-(2, 'Lakshadweep', 'icons/Lakshadweep (1).png'),
-(3, 'Manali', 'icons/Manali (1).png'),
-(4, 'Rajasthan', 'icons/Screenshot_2024-02-08_111104-removebg-preview.png'),
-(5, 'Golden Triangle', 'icons/Golden triangle (1).png'),
-(6, 'Andaman', 'icons/Andaman.png'),
-(7, 'Sikkim', 'icons/output-onlinepngtools (3).png'),
-(8, 'Meghalaya', 'icons/output-onlinepngtools (2).png'),
-(9, 'Varanasi', 'icons/output-onlinepngtools (1).png');
+(1, 'Kerala', 'icons/house-boat.svg'),
+(2, 'Lakshadweep', 'icons/palm-tree.svg'),
+(3, 'Manali', 'icons/mountain.svg'),
+(4, 'Rajasthan', 'icons/camel (2).svg'),
+(5, 'Golden Triangle', 'icons/taj-mahal.svg'),
+(6, 'Andaman', 'icons/surf.svg'),
+(7, 'Sikkim', 'icons/buddha-statue.svg'),
+(8, 'Meghalaya', 'icons/hiking.svg'),
+(9, 'Varanasi', 'icons/temple.svg');
 
 -- --------------------------------------------------------
 

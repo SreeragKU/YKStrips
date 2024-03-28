@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -78,7 +79,6 @@
         <div class="logo">
             <img src="img/logo.png" alt="Logo" style="max-width: 100%;">
         </div>
-        <a href="dashboard.php">Dashboard</a>
         <a href="viewall.php">View All Packages</a>
         <a href="addpackage.php">Add New Package</a>
         <a href="categories.php">Manage Destination</a>

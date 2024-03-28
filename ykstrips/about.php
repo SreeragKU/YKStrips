@@ -287,7 +287,7 @@ $conn->close();
     </style>
     <style>
         body {
-            background-image: url('img/background-2.png');
+            background-image: url('img/visabg.png');
             background-repeat: repeat;
             background-size: 300px 300px;
             background-position: center center;
@@ -430,56 +430,94 @@ $conn->close();
             So, we built a charming space dedicated to crafting seamless and unforgettable journeys.
             The best part? Our travelers, enchanted by our first adventure, now choose only us for their next escapade.
             We carefully pick destinations and assemble a friendly team, ensuring each trip is a simple yet beautiful memory.
-        </p>W
+        </p>
     </div>
-    <!-- Our Journey End -->
-    <div class="slider-val-item2">
-        <img src="img/employ.png" alt="Value 4">
-    </div>
-
-    <!-- Apply Now Button -->
-    <div class="text-center py-4">
-        <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#applyNowModal">Apply Now</button>
-    </div>
-
-   <!-- Apply Now Modal -->
-<div class="modal fade" id="applyNowModal" tabindex="-1" aria-labelledby="applyNowModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="applyNowModalLabel">Apply Now</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Add your application form here -->
-                <form action="#" method="post" enctype="multipart/form-data">
-                    <!-- Basic details inputs -->
-                    <div class="mb-3">
-                        <label for="fullName" class="form-label">Full Name</label>
-                        <input type="text" class="form-control" id="fullName" name="fullName" pattern="[A-Za-z ]{1,}" title="Please enter a valid name" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" title="Please enter a valid email address" required>
-                    </div>
-
-                    <!-- CV/Resume upload -->
-                    <div class="mb-3">
-                        <label for="resume" class="form-label">Upload CV/Resume (PDF or DOCX only)</label>
-                        <input type="file" class="form-control" id="resume" name="resume" accept=".pdf, .doc, .docx" required>
-                        <small id="fileHelp" class="form-text text-muted">Supported formats: PDF, DOC, DOCX</small>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Submit Application</button>
-                </form>
+    <div class="card" style="
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    ">
+    <div class="card-body" style="padding: 20px;">
+        <div class="d-flex flex-column-reverse flex-lg-row justify-content-between align-items-center">
+            <img src="img/job.png" alt="Job Image" style="
+                flex: 1;
+                height: 100%;
+                object-fit: cover;
+                max-width: 100%;
+            ">
+            <div class="slider-val-item2" style="flex: 1;">
+                <p style="
+                    font-size: 3em;
+                    color: #333;
+                    margin-bottom: 0;
+                ">
+                    Seeking Elegant Employment?
+                </p>
+                <button class="btn btn-primary" style="margin-left: 10px;" data-bs-toggle="modal" data-bs-target="#applyNowModal">Apply Now</button>
+                <p class="lead" style="
+                    font-size: 1.5em;
+                    color: #555;
+                    margin-top: 20px;
+                ">
+                    We're not just a team; we're a group of friends weaving together the tapestry of seamless travel, reminiscing about the good old school and college days. Ready to embark on this incredible journey with us?
+                </p>
             </div>
         </div>
     </div>
 </div>
 
+<style>
+    @media (max-width: 768px) {
+        .slider-val-item2 {
+            text-align: center;
+        }
+        .slider-val-item2 p {
+            font-size: 2em;
+        }
+        .slider-val-item2 img {
+            max-width: 100%;
+            height: auto;
+        }
+    }
+</style>
 
 
+
+    <!-- Apply Now Modal -->
+    <div class="modal fade" id="applyNowModal" tabindex="-1" aria-labelledby="applyNowModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="applyNowModalLabel">Apply Now</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Add your application form here -->
+                    <form action="#" method="post" enctype="multipart/form-data">
+                        <!-- Basic details inputs -->
+                        <div class="mb-3">
+                            <label for="fullName" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="fullName" name="fullName" pattern="[A-Za-z ]{1,}" title="Please enter a valid name" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" title="Please enter a valid email address" required>
+                        </div>
+
+                        <!-- CV/Resume upload -->
+                        <div class="mb-3">
+                            <label for="resume" class="form-label">Upload CV/Resume (PDF or DOCX only)</label>
+                            <input type="file" class="form-control" id="resume" name="resume" accept=".pdf, .doc, .docx" required>
+                            <small id="fileHelp" class="form-text text-muted">Supported formats: PDF, DOC, DOCX</small>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Submit Application</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <?php include "footer.php"; ?>
 
