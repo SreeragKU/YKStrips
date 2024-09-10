@@ -27,17 +27,15 @@ while ($row = $categoryResultPackages->fetch_assoc()) {
     $categoriesPackages[] = $row;
 }
 
-// Fetch images from the database
-$sql = "SELECT image_path FROM background_images";
-$result = $conn->query($sql);
-$images = [];
-
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $images[] = $row['image_path'];
-    }
-}
+// Convert the PHP array to JSON
+$imagesJson = json_encode($images);
 ?>
+
+<script>
+    // Log the result to the console
+    const images = <?php echo $imagesJson; ?>;
+    console.log(images);
+</script>
 
 <!DOCTYPE html>
 <html lang="en">
